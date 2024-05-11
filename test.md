@@ -64,3 +64,11 @@ async function generateRandomNumber() {
 // Apelăm funcția pentru a genera un număr aleatoriu
 generateRandomNumber();
 
+## Pasul 5: Rularea Aplicației
+
+1. **Salvăm fișierul `index.js`.**
+2. **Deschide terminalul în directorul proiectului și rulează aplicația folosind următoarea comandă:**
+   ```bash
+   node index.js
+
+
