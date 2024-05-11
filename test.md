@@ -8,7 +8,18 @@
 
 2. **Creare Director de Lucru:** Creează un director nou pentru proiectul tău și navighează în el folosind terminalul sau linia de comandă.
 
-### Pasul 2: Inițializare a Proiectului Node.js
+## Pasul 2: Obținerea unei Chei API de la Random.org
+
+1. Accesează site-ul Random.org în browserul tău.
+2. Dacă nu ai deja un cont, apasă pe butonul "Sign Up" sau "Înregistrare" pentru a-ți crea un cont nou.
+3. Completează formularul de înregistrare cu informațiile tale personale și creează un cont.
+4. După ce te-ai logat în contul tău Random.org, caută și apasă pe opțiunea "Account Settings" sau "Setările Contului".
+5. În pagina de setări a contului, ar trebui să găsești o opțiune numită "API Key" sau "Cheie API". Caută această opțiune și apasă pe ea.
+6. Dacă nu ai deja o cheie API generată, ar trebui să existe o opțiune pentru a genera una nouă. Apasă pe butonul sau linkul corespunzător pentru a genera o cheie API nouă.
+7. După ce ai generat o cheie API nouă, aceasta ar trebui să fie afișată pe ecran.
+
+
+### Pasul 3: Inițializare a Proiectului Node.js
 
 1. Deschide terminalul și navighează în directorul proiectului.
 
@@ -17,14 +28,14 @@
 ```bash
 npm init -y
 ```
-### Pasul 3: Instalare a Dependințelor
+### Pasul 4: Instalare a Dependințelor
 
 1. **Instalare a Pachetului `axios`:** Vom utiliza pachetul `axios` pentru a efectua cereri HTTP către API-ul Random.org. Instalează `axios` folosind următoarea comandă:
 ```bash
 npm install axios
 ```
 
-### Pasul 4: Scrierea Codului
+### Pasul 5: Scrierea Codului
 
 1. Deschide fișierul `index.js` sau creează un fișier nou cu numele `index.js`.
 
@@ -65,7 +76,7 @@ async function generateRandomNumber() {
 generateRandomNumber();
 ```
 
-## Pasul 5: Rularea Aplicației
+## Pasul 6: Rularea Aplicației
 
 1. **Salvăm fișierul `index.js`.**
 2. **Deschide terminalul în directorul proiectului și rulează aplicația folosind următoarea comandă:**
