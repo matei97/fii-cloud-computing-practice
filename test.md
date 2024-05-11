@@ -14,15 +14,15 @@
 
 2. Rulează următoarea comandă pentru a inițializa un proiect Node.js:
 
+```bash
 npm init -y
-
-
+```
 ### Pasul 3: Instalare a Dependințelor
 
 1. **Instalare a Pachetului `axios`:** Vom utiliza pachetul `axios` pentru a efectua cereri HTTP către API-ul Random.org. Instalează `axios` folosind următoarea comandă:
-
+```bash
 npm install axios
-
+```
 
 ### Pasul 4: Scrierea Codului
 
@@ -63,12 +63,13 @@ async function generateRandomNumber() {
 
 // Apelăm funcția pentru a genera un număr aleatoriu
 generateRandomNumber();
+```
 
 ## Pasul 5: Rularea Aplicației
 
 1. **Salvăm fișierul `index.js`.**
 2. **Deschide terminalul în directorul proiectului și rulează aplicația folosind următoarea comandă:**
-   ```bash
+```bash
    node index.js
-
+```
 
