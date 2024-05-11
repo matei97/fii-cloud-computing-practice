@@ -8,8 +8,7 @@ Dorim să creăm o aplicație Node.js care să efectueze apeluri către două AP
 1. Implementează o aplicație Node.js care să efectueze apeluri către două API-uri diferite. Apelurile trebuie să fie realizate secvențial, astfel încât răspunsul de la primul API să fie utilizat în cererea către al doilea API.
 2. Selectează două API-uri publice care să ofere diferite tipuri de date sau servicii. Aceste API-uri trebuie să fie disponibile pentru accesare gratuită și să permită cereri HTTP.
 3. În momentul implementării, asigură-te că gestionezi erorile corespunzător și afișezi un mesaj adecvat în cazul în care un apel către un API eșuează.
-4. Documentează pașii necesari pentru rularea și testarea aplicației, inclusiv instalarea dependințelor necesare și configurarea parametrilor pentru API-urile utilizate.
-
+4. Creaza un repository pe GitHub unde vei salva codul sursa.
 
 ### Exemple de API-uri
 
