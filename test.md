@@ -1,31 +1,36 @@
-Ghid: Crearea unei Aplicații Node.js pentru Accesarea unui API
+## Ghid: Crearea unei Aplicații Node.js pentru Accesarea unui API
+
 În acest ghid, vom învăța cum să creăm o aplicație simplă Node.js care accesează un API extern pentru a genera numere aleatorii. Vom utiliza API-ul Random.org pentru acest exemplu.
 
-Pasul 1: Configurare a Mediului de Lucru
-Instalează Node.js: Descarcă și instalează Node.js de pe site-ul oficial: Node.js Download.
+### Pasul 1: Configurare a Mediului de Lucru
 
-Creare Director de Lucru: Creează un director nou pentru proiectul tău și navighează în el folosind terminalul sau linia de comandă.
+1. **Instalează Node.js:** Descarcă și instalează Node.js de pe site-ul oficial: [Node.js Download](https://nodejs.org/).
 
-Pasul 2: Inițializare a Proiectului Node.js
-Deschide terminalul și navighează în directorul proiectului.
+2. **Creare Director de Lucru:** Creează un director nou pentru proiectul tău și navighează în el folosind terminalul sau linia de comandă.
 
-Rulează următoarea comandă pentru a inițializa un proiect Node.js:
+### Pasul 2: Inițializare a Proiectului Node.js
 
-csharp
-Copy code
+1. Deschide terminalul și navighează în directorul proiectului.
+
+2. Rulează următoarea comandă pentru a inițializa un proiect Node.js:
+
 npm init -y
-Pasul 3: Instalare a Dependințelor
 
-Instalare a Pachetului axios: Vom utiliza pachetul axios pentru a efectua cereri HTTP către API-ul Random.org. Instalează axios folosind următoarea comandă:
-Copy code
+
+### Pasul 3: Instalare a Dependințelor
+
+1. **Instalare a Pachetului `axios`:** Vom utiliza pachetul `axios` pentru a efectua cereri HTTP către API-ul Random.org. Instalează `axios` folosind următoarea comandă:
+
 npm install axios
-Pasul 4: Scrierea Codului
-Deschide fișierul index.js sau creează un fișier nou cu numele index.js.
 
-În fișierul index.js, scrie următorul cod:
 
-javascript
-Copy code
+### Pasul 4: Scrierea Codului
+
+1. Deschide fișierul `index.js` sau creează un fișier nou cu numele `index.js`.
+
+2. În fișierul `index.js`, scrie următorul cod:
+
+```javascript
 // Importăm modulul axios
 const axios = require('axios');
 
@@ -58,16 +63,4 @@ async function generateRandomNumber() {
 
 // Apelăm funcția pentru a genera un număr aleatoriu
 generateRandomNumber();
-Asigură-te că înlocuiești 'API_KEY' cu cheia ta API de la Random.org.
 
-Pasul 5: Rularea Aplicației
-Salvăm fișierul index.js.
-
-Deschide terminalul în directorul proiectului și rulează aplicația folosind următoarea comandă:
-
-Copy code
-node index.js
-Dacă totul a fost configurat corect, ar trebui să vezi în consolă un număr aleatoriu generat de API-ul Random.org.
-
-Pasul 6: Finalizare
-Felicitări! Ai creat cu succes o aplicație Node.js care accesează API-ul Random.org pentru a genera numere aleatorii. Poți continua să explorezi și să îmbunătățești această aplicație adăugând mai multă funcționalitate sau folosind alte API-uri pentru a obține date aleatorii sau diferite tipuri de conținut.
