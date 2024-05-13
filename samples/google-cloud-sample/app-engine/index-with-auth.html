@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Image to Pdf Converter</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.6.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.6.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/ui/4.5.0/firebase-ui-auth.js"></script>
+  <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.5.0/firebase-ui-auth.css">
+</head>
+<body>
+  <button id="sign-out" style="display: none">Sign out</button> 
+
+  <div id="logged-out">
+    <h1>Cloud Computing GCP Demo</h1>
+    <h3>Sign in to access the laboratory</h3>
+    <div id="firebaseui-auth-container"></div>
+  </div>
+  <div id="logged-in" style="display: none;">
+
+  <h1>User Registration</h1>
+  <h1>Welcome, <span id="user"></span>!</h1>
+
+  <form action="/submit" method="POST" enctype="multipart/form-data">
+    <label for="firstName">Full Name:</label>
+    <input type="text" name="firstName" id="firstName" required>
+    <br>
+    <label for="email">Email:</label>
+    <input type="text" name="email" id="email"  style="width: 200px;" required>
+    <!-- <br>
+    <label for="group">Group:</label>
+    <input type="text" name="group" id="group" required> -->
+    <br>
+    <label for="file" >Profile picture:</label>
+    <input type="file" name="file" accept=".jpg,.jpeg,.png" max-size="10000000" required>
+    <br>
+    <button type="submit">Register</button>
+  </form>
+</div>
+<script>
+  var config = {
+    apiKey: "AIzaSyCA4FnJWsDfzdOwBD-sDu6v-Fbt09piTGM",
+    authDomain: "exalted-entry-416109.firebaseapp.com",
+  };
+  // [END gae_python_firenotes_config]
+
+  // This is passed into the backend to authenticate the user.
+  var userIdToken = null;
+
+
+  function configureFirebaseLogin() {
+
+    firebase.initializeApp(config);
+
+    // [START gae_python_state_change]
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        $('#logged-out').hide();
+        $('#sign-out').show();
+        var name = user.displayName;
+
+        /* If the provider gives a display name, use the name for the
+        personal welcome message. Otherwise, use the user's email. */
+        var welcomeName = name ? name : user.email;
+
+        user.getIdToken().then(function (idToken) {
+          userIdToken = idToken;
+          console.log("Token: " + userIdToken)
+          /* Now that the user is authenicated, fetch the notes. */
+
+          $('#user').text(welcomeName);
+          $("#token").val(userIdToken);
+          $('#logged-in').show();
+
+
+          $('#firstName').val(user.displayName);
+          $('#email').val(user.email);
+        });
+
+      } else {
+        $('#logged-in').hide();
+        $('#logged-out').show();
+        $('#sign-out').hide();
+      }
+    });
+    // [END gae_python_state_change]
+
+  }
+
+  // [START gae_python_firebase_login]
+  // Firebase log-in widget
+  function configureFirebaseLoginWidget() {
+    var uiConfig = {
+      'signInSuccessUrl': '/',
+      'signInOptions': [
+        // Leave the lines as is for the providers you want to offer your users.
+        firebase.auth.GoogleAuthProvider.PROVIDER_ID
+      ],
+      // Terms of service url
+      'tosUrl': '<your-tos-url>',
+    };
+
+    var ui = new firebaseui.auth.AuthUI(firebase.auth());
+    ui.start('#firebaseui-auth-container', uiConfig);
+  }
+
+  var signOutBtn =$('#sign-out');
+  signOutBtn.click(function(event) {
+    event.preventDefault();
+
+    firebase.auth().signOut().then(function() {
+      console.log("Sign out successful");
+    }, function(error) {
+      console.log(error);
+    });
+  });
+
+  configureFirebaseLogin();
+  configureFirebaseLoginWidget();
+</script>
+
+</body>
+</html>
