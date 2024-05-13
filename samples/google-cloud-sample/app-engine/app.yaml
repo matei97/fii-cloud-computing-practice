@@ -13,8 +13,10 @@
 
 # [START gae_storage_yaml]
 runtime: nodejs18
-service: aplicatie-management-studenti
+# service: aplicatie-management-studenti
+service: default
 service_account: aplicatie-studenti-v1@appspot.gserviceaccount.com
 env_variables:
   GCLOUD_STORAGE_BUCKET: date-media-utilizator-neprocesate-v2
+  DATASTORE_DATABASE_ID: management-studenti
 # [END gae_storage_yaml]

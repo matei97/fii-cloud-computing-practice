@@ -31,7 +31,7 @@ const {Storage} = require('@google-cloud/storage');
 
 
 const datastore = new Datastore({
-  databaseId:"users"
+  databaseId:process.env.DATASTORE_DATABASE_ID
 });
   
 // Instantiate a storage client
@@ -70,12 +70,10 @@ app.post('/submit', multer.single('file'), (req, res, next) => {
     return;
   }
 
-
   datastore.save({
     key: datastore.key('users'),
     data: req.body,
   });
-
 
   // Create a new blob in the bucket and upload the file data.
   const blob = bucket.file(req.file.originalname);
