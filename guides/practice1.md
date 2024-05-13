@@ -1,6 +1,6 @@
 ## Cerință pentru Exercițiu: Orchestarea Apelurilor către API-uri Diferite
 
-Dorim să creăm o aplicație Node.js care să efectueze apeluri către două API-uri diferite într-o manieră orchestrată. Apelurile către API-uri vor fi făcute secvențial, astfel vom afisa un raspuns compus format din anbele raspunsuri.
+Dorim să creăm o aplicație Node.js care să efectueze apeluri către două API-uri diferite într-o manieră orchestrată. Apelurile către API-uri vor fi făcute secvențial, astfel vom afisa un raspuns compus format din ambele raspunsuri.
 
 
 ### Cerințe
