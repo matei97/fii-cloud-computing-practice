@@ -35,8 +35,9 @@ const {
 } = require('@google-cloud/vertexai');
 
 const location = 'us-central1';
-const textModel = 'gemini-1.0-pro';
 const visionModel = 'gemini-1.0-pro-vision';
+const textModel = 'gemini-1.0-pro-001';
+
 
 const { Storage } = require('@google-cloud/storage');
 
@@ -45,8 +46,40 @@ const { Storage } = require('@google-cloud/storage');
 const storage = getStorageClient();
 const datastore = getDatastoreClient();
 const vertexAI = getGenericVertexAIClient();
+
+
+const generativeModel = vertexAI.preview.getGenerativeModel({
+  model: textModel,
+  generationConfig: {
+    'candidateCount': 1,
+    'maxOutputTokens': 4096,
+    'topP': 1,
+  },
+  safetySettings: [
+    {
+      'category': 'HARM_CATEGORY_HATE_SPEECH',
+      'threshold': 'BLOCK_MEDIUM_AND_ABOVE'
+    },
+    {
+      'category': 'HARM_CATEGORY_DANGEROUS_CONTENT',
+      'threshold': 'BLOCK_MEDIUM_AND_ABOVE'
+    },
+    {
+      'category': 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
+      'threshold': 'BLOCK_MEDIUM_AND_ABOVE'
+    },
+    {
+      'category': 'HARM_CATEGORY_HARASSMENT',
+      'threshold': 'BLOCK_MEDIUM_AND_ABOVE'
+    }
+  ],
+});
+
+
+const generativeVisionModel = getVisionModel();
 const path = require('path');
 const app = express();
+const fs = require('fs');
 app.set('view engine', 'pug');
 // This middleware is available in Express v4.16.0 onwards
 app.use(express.json());
@@ -67,14 +100,18 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 // Process the file upload and upload to Google Cloud Storage.
-app.post('/submit', multer.single('file'), (req, res, next) => {
+app.post('/submit', multer.single('file'), async (req, res, next) => {
 
   console.log(req.body);
   if (!req.file) {
     res.status(400).send('No file uploaded.');
     return;
   }
-  SaveInDatabase(req.body);
+
+  var englishContent = await detectImageContent(req.file);
+  var roContent = await translateContent(englishContent);
+
+  SaveInDatabase(req.body, englishContent, roContent);
   SaveInStorage(req.file, res);
 });
 
@@ -92,6 +129,22 @@ function getDatastoreClient() {
   });
 }
 
+async function detectImageContent(file) {
+
+  const base64Image = file.buffer.toString('base64');
+
+  // Replace this with your own base64 image string
+  const filePart = { inline_data: { data: base64Image, mimeType: 'image/jpeg' } };
+  const textPart = { text: 'What is this picture about?' };
+  const request = {
+    contents: [{ role: 'user', parts: [textPart, filePart] }],
+  };
+  const streamingResult = await generativeVisionModel.generateContentStream(request);
+  const contentResponse = await streamingResult.response;
+
+  return contentResponse.candidates[0].content.parts[0].text;
+}
+
 function getGenericVertexAIClient() {
   const authOptions = {
     credentials: {
@@ -103,7 +156,15 @@ function getGenericVertexAIClient() {
   return new VertexAI({ project: creds.project_id, location: location, googleAuthOptions: authOptions });
 }
 
-function SaveInDatabase(body) {
+function getVisionModel() {
+  return vertexAI.getGenerativeModel({
+    model: visionModel,
+  });
+}
+function SaveInDatabase(body, enContent, roContent) {
+  body.enContent = enContent;
+  body.roContent = roContent;
+
   datastore.save({
     key: datastore.key('users'),
     data: body,
@@ -144,5 +205,25 @@ function initServer() {
 
 }
 
+async function translateContent(content, source = "en", target = "ro") {
+  const req = {
+    contents: [
+      { role: 'user', parts: [{ text: `translate from ${source} to ${target}: ${content}}` }] }
+    ]
+  };
+
+  const result = await generativeModel.generateContent(req);
+  const jsonResponse =  JSON.stringify(result.response.candidates[0].content.parts[0].text);
+  console.log('Response: ', jsonResponse);
+
+  // const response = jsonResponse.candidates[0].content.parts[0].text;
+
+  // console.log('Response: ', response);
+
+  return jsonResponse;
+}
+
+
 initServer();
+
 module.exports = app;
