@@ -48,32 +48,7 @@ const datastore = getDatastoreClient();
 const vertexAI = getGenericVertexAIClient();
 
 
-const generativeModel = vertexAI.preview.getGenerativeModel({
-  model: textModel,
-  generationConfig: {
-    'candidateCount': 1,
-    'maxOutputTokens': 4096,
-    'topP': 1,
-  },
-  safetySettings: [
-    {
-      'category': 'HARM_CATEGORY_HATE_SPEECH',
-      'threshold': 'BLOCK_MEDIUM_AND_ABOVE'
-    },
-    {
-      'category': 'HARM_CATEGORY_DANGEROUS_CONTENT',
-      'threshold': 'BLOCK_MEDIUM_AND_ABOVE'
-    },
-    {
-      'category': 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
-      'threshold': 'BLOCK_MEDIUM_AND_ABOVE'
-    },
-    {
-      'category': 'HARM_CATEGORY_HARASSMENT',
-      'threshold': 'BLOCK_MEDIUM_AND_ABOVE'
-    }
-  ],
-});
+const generativeModel = getGenerativeModelTranslateModel();
 
 
 const generativeVisionModel = getVisionModel();
@@ -223,6 +198,34 @@ async function translateContent(content, source = "en", target = "ro") {
   return jsonResponse;
 }
 
+function getGenerativeModelTranslateModel(){
+  return vertexAI.preview.getGenerativeModel({
+    model: textModel,
+    generationConfig: {
+      'candidateCount': 1,
+      'maxOutputTokens': 4096,
+      'topP': 1,
+    },
+    safetySettings: [
+      {
+        'category': 'HARM_CATEGORY_HATE_SPEECH',
+        'threshold': 'BLOCK_MEDIUM_AND_ABOVE'
+      },
+      {
+        'category': 'HARM_CATEGORY_DANGEROUS_CONTENT',
+        'threshold': 'BLOCK_MEDIUM_AND_ABOVE'
+      },
+      {
+        'category': 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
+        'threshold': 'BLOCK_MEDIUM_AND_ABOVE'
+      },
+      {
+        'category': 'HARM_CATEGORY_HARASSMENT',
+        'threshold': 'BLOCK_MEDIUM_AND_ABOVE'
+      }
+    ],
+  });
+}
 
 initServer();
 
