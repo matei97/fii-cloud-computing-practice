@@ -17,23 +17,23 @@
 const process = require('process'); // Required to mock environment variables
 
 // [START gae_storage_app]
-const {format} = require('util');
+const { format } = require('util');
 const express = require('express');
 const Multer = require('multer');
-const {Datastore} = require('@google-cloud/datastore');
+const { Datastore } = require('@google-cloud/datastore');
 
 // By default, the client will authenticate using the service account file
 // specified by the GOOGLE_APPLICATION_CREDENTIALS environment variable and use
 // the project specified by the GOOGLE_CLOUD_PROJECT environment variable. See
 // https://github.com/GoogleCloudPlatform/google-cloud-node/blob/master/docs/authentication.md
 // These environment variables are set automatically on Google App Engine
-const {Storage} = require('@google-cloud/storage');
+const { Storage } = require('@google-cloud/storage');
 
 
 const datastore = new Datastore({
-  databaseId:process.env.DATASTORE_DATABASE_ID
+  databaseId: process.env.DATASTORE_DATABASE_ID
 });
-  
+
 // Instantiate a storage client
 const storage = new Storage();
 const path = require('path');
@@ -58,11 +58,11 @@ const bucket = storage.bucket(process.env.GCLOUD_STORAGE_BUCKET);
 
 // Display a form for uploading files.
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // Process the file upload and upload to Google Cloud Storage.
-app.post('/submit', multer.single('file'), (req, res, next) => {
+app.post('/submit', multer.single('file'),  async (req, res, next) => {
 
   console.log(req.body);
   if (!req.file) {
@@ -70,9 +70,11 @@ app.post('/submit', multer.single('file'), (req, res, next) => {
     return;
   }
 
-  datastore.save({
+  let userData = { email: req.body.email, firstName: req.body.firstName, fileName: req.file.originalname }
+
+  await datastore.save({
     key: datastore.key('users'),
-    data: req.body,
+    data: userData,
   });
 
   // Create a new blob in the bucket and upload the file data.
@@ -90,7 +92,7 @@ app.post('/submit', multer.single('file'), (req, res, next) => {
     const publicUrl = format(
       `https://storage.googleapis.com/${bucket.name}/${blob.name}`
     );
-    res.status(200).send('This is your file ' + publicUrl+' , please check your email');
+    res.status(200).send('This is your file ' + publicUrl + ' , please check your email');
   });
 
   blobStream.end(req.file.buffer);

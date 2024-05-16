@@ -1,8 +1,5 @@
 const functions = require('@google-cloud/functions-framework');
-const { Storage } = require('@google-cloud/storage');
 const { Datastore } = require('@google-cloud/datastore');
-const sharp = require('sharp');
-const path = require('path');
 const {
   VertexAI
 } = require('@google-cloud/vertexai');
@@ -76,13 +73,13 @@ function getVisionModel() {
 }
 
 function getGenericVertexAIClient() {
-  return new VertexAI({ project: "aplicatie-studenti-v1", location: location });
+  return new VertexAI({ project: process.env.PROJECT, location: location });
 }
 
 
 async function detectImageContent(file) {
   // Replace this with your own base64 image string
-  const filePart = {fileData: {fileUri: `gs://${file.bucket}/${file.name}`, mimeType: "image/jpeg"}};
+  const filePart = { fileData: { fileUri: `gs://${file.bucket}/${file.name}`, mimeType: "image/jpeg" } };
   const textPart = { text: 'What is this picture about?' };
   const request = {
     contents: [{ role: 'user', parts: [textPart, filePart] }],
@@ -135,7 +132,7 @@ async function SaveInDatabase(data, originalname) {
 
 function getDatastoreClient() {
   return new Datastore({
-    projectId: "aplicatie-studenti-v1",
-    databaseId: "usersv3",
+    projectId: process.env.PROJECT,
+    databaseId: process.env.DATASTORE_DATABASE_ID,
   });
 }
