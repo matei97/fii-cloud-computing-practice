@@ -1,0 +1,79 @@
+﻿@page "/addweather"
+@inject WeatherApiClient WeatherApi
+
+<PageTitle>Create Weather Forecast</PageTitle>
+
+<h1>Create Weather Forecast</h1>
+
+<p>This component demonstrates creating a new weather forecast record.</p>
+
+<EditForm Model="newForecast" OnValidSubmit="HandleValidSubmit" FormName="weather">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label for="date" class="form-label">Date</label>
+        <InputDate id="date" class="form-control" @bind-Value="newForecast.Date" />
+    </div>
+
+    <div class="mb-3">
+        <label for="temperatureC" class="form-label">Temperature (C)</label>
+        <InputNumber id="temperatureC" class="form-control" @bind-Value="newForecast.TemperatureC" />
+    </div>
+
+    <div class="mb-3">
+        <label for="summary" class="form-label">Summary</label>
+        <InputText id="summary" class="form-control" @bind-Value="newForecast.Summary" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+@if (successMessage != null)
+{
+    <div class="alert alert-success" role="alert">
+        @successMessage
+    </div>
+}
+
+@if (errorMessage != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @errorMessage
+    </div>
+}
+
+@code {
+
+    [SupplyParameterFromForm]
+    public WeatherForecast newForecast { get; set; }
+
+    private string? successMessage;
+    private string? errorMessage;
+
+    protected override void OnInitialized() => newForecast ??= new();
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            await WeatherApi.CreateWeather(new Web.WeatherForecast(new DateOnly(newForecast.Date.Year, newForecast.Date.Month, newForecast.Date.Day),
+                newForecast.TemperatureC, newForecast.Summary));
+            successMessage = "Weather forecast created successfully!";
+            errorMessage = null;
+            newForecast = new WeatherForecast(); // Reset the form
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error creating weather forecast: {ex.Message}";
+            successMessage = null;
+        }
+    }
+
+    public class WeatherForecast
+    {
+        public DateTime Date { get; set; }
+        public int TemperatureC { get; set; }
+        public string Summary { get; set; }
+    }
+}
