@@ -37,16 +37,16 @@ resource caeMiRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01
   }
 }
 
-resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2022-10-01' = {
-  name: 'law-${resourceToken}'
-  location: location
-  properties: {
-    sku: {
-      name: 'PerGB2018'
-    }
-  }
-  tags: tags
-}
+// resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2022-10-01' = {
+//   name: 'law-${resourceToken}'
+//   location: location
+//   properties: {
+//     sku: {
+//       name: 'PerGB2018'
+//     }
+//   }
+//   tags: tags
+// }
 
 resource containerAppEnvironment 'Microsoft.App/managedEnvironments@2024-02-02-preview' = {
   name: 'cae-${resourceToken}'
@@ -56,13 +56,13 @@ resource containerAppEnvironment 'Microsoft.App/managedEnvironments@2024-02-02-p
       workloadProfileType: 'Consumption'
       name: 'consumption'
     }]
-    appLogsConfiguration: {
-      destination: 'log-analytics'
-      logAnalyticsConfiguration: {
-        customerId: logAnalyticsWorkspace.properties.customerId
-        sharedKey: logAnalyticsWorkspace.listKeys().primarySharedKey
-      }
-    }
+    // appLogsConfiguration: {
+    //   destination: 'log-analytics'
+    //   logAnalyticsConfiguration: {
+    //     customerId: logAnalyticsWorkspace.properties.customerId
+    //     sharedKey: logAnalyticsWorkspace.listKeys().primarySharedKey
+    //   }
+    // }
   }
   tags: tags
 
@@ -85,8 +85,8 @@ resource explicitContributorUserRoleAssignment 'Microsoft.Authorization/roleAssi
 output MANAGED_IDENTITY_CLIENT_ID string = managedIdentity.properties.clientId
 output MANAGED_IDENTITY_NAME string = managedIdentity.name
 output MANAGED_IDENTITY_PRINCIPAL_ID string = managedIdentity.properties.principalId
-output AZURE_LOG_ANALYTICS_WORKSPACE_NAME string = logAnalyticsWorkspace.name
-output AZURE_LOG_ANALYTICS_WORKSPACE_ID string = logAnalyticsWorkspace.id
+// output AZURE_LOG_ANALYTICS_WORKSPACE_NAME string = logAnalyticsWorkspace.name
+// output AZURE_LOG_ANALYTICS_WORKSPACE_ID string = logAnalyticsWorkspace.id
 output AZURE_CONTAINER_REGISTRY_ENDPOINT string = containerRegistry.properties.loginServer
 output AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID string = managedIdentity.id
 output AZURE_CONTAINER_APPS_ENVIRONMENT_ID string = containerAppEnvironment.id
