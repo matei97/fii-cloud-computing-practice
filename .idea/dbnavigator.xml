@@ -24,9 +24,7 @@
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files>
-      <object connection-id="9236d7a8-2b9c-4651-993c-35dd5848b1e8" object-ref="schemas/Clouding/tables/Accounts" />
-    </open-files>
+    <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="9236d7a8-2b9c-4651-993c-35dd5848b1e8" />
