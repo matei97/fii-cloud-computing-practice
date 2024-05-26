@@ -1,0 +1,167 @@
+{
+	"info": {
+		"_postman_id": "bc196689-0d55-4547-9d33-308ed5b5a164",
+		"name": "Rest Api Node Js",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GetById",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Custom\",\r\n    \"description\": \"Descriere\",\r\n    \"price\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5005/api/products/d56745d3-566d-42bc-bf21-b479835f2bc0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5005",
+					"path": [
+						"api",
+						"products",
+						"d56745d3-566d-42bc-bf21-b479835f2bc0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Custom\",\r\n    \"description\": \"Descriere\",\r\n    \"price\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5005/api/products/d56745d3-566d-42bc-bf21-b479835f2bc0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5005",
+					"path": [
+						"api",
+						"products",
+						"d56745d3-566d-42bc-bf21-b479835f2bc0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Forecast",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Custom\",\r\n    \"description\": \"Descriere\",\r\n    \"price\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5005/api/products/d56745d3-566d-42bc-bf21-b479835f2bc0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5005",
+					"path": [
+						"api",
+						"products",
+						"d56745d3-566d-42bc-bf21-b479835f2bc0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Modify",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Nume cacheuit varianta 3\",\r\n    \"description\": \"descriere cachuita varianta 4\",\r\n    \"price\": 5\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5005/api/products/41abe07a-03b3-4d56-b623-0218dbea0161",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5005",
+					"path": [
+						"api",
+						"products",
+						"41abe07a-03b3-4d56-b623-0218dbea0161"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Produs nou\",\r\n    \"description\": \"Descriere\",\r\n    \"price\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5005/api/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5005",
+					"path": [
+						"api",
+						"products"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
