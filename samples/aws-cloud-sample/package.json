@@ -1,0 +1,24 @@
+{
+  "name": "vanilla-node-rest-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node 1_s3/server.js",
+    "test": "mocha --timeout 10000",
+    "dev": "nodemon 1_s3/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "mocha": "^8.2.0",
+    "nodemon": "^2.0.5"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.1632.0",
+    "mysql2": "^3.9.7"
+  }
+}

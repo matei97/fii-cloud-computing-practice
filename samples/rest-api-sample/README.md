@@ -63,7 +63,7 @@
     - Asigură-te că toate operațiunile CRUD asupra cărților necesită un token JWT valid pentru a fi accesate.
     - Adaugă middleware-ul de verificare JWT la toate endpoint-urile relevante.
 
-## Validare și documentare
+## Validare
 
 13. **Validarea datelor și gestionarea erorilor**:
     - Adaugă validări pentru toate endpoint-urile pentru a te asigura că datele primite sunt corecte.

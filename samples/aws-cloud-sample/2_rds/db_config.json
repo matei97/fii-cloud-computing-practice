@@ -1,0 +1,7 @@
+{
+  "instance_name": "fii-cloud-mysql-db.c1kgiaeka0oq.us-east-2.rds.amazonaws.com",
+  "database_name": "fii_cloud_db_test",
+  "port": "3306",
+  "username": "admin",
+  "password": "fii-cloud-password"
+}
