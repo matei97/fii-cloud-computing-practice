@@ -1,125 +1,319 @@
-## Ghid: Crearea unei Aplicații folosind Azure Cloud
+## Ghid: Crearea unei Aplicații folosind GCP (Google Cloud Provider)
 
+În acest ghid, vom învăța cum să creăm o aplicație simplă Node.js care accesează un API extern pentru a genera numere aleatorii. Vom utiliza API-ul Random.org pentru acest exemplu.
 
-### Pasul 1: Crearea Resource Group-ului "aplicatie-laborator" folosind Azure Cloud Shell
+### Pasul 1: Crearea Proiectului și Configurarea Setărilor Folosind Cloud Shell
 
-1. Deschide [Azure Portal](https://portal.azure.com/) într-un browser web.
+1. Deschide [Google Cloud Console](https://console.cloud.google.com/) într-un browser web.
 
-2. În partea dreaptă sus a ecranului, click pe iconița de Cloud Shell (ar trebui să arate ca un terminal).
+2. În partea de sus dreapta a ecranului, apasă pe butonul "Activate Cloud Shell" pentru a deschide Cloud Shell.
 
-3. Dacă este prima dată când folosești Cloud Shell, va trebui să alegi între Bash și PowerShell. Pentru acest ghid, vom folosi Bash. Dacă ai deja configurat Cloud Shell, poți sări peste acest pas.
-
-4. În Cloud Shell, execută următoarea comandă pentru a crea un resource group numit "aplicatie-laborator" în regiunea "westeurope":
-```bash
-az group create --name aplicatie-laborator --location westeurope
-```
-Explicație Comandă
-- az group create este comanda Azure CLI pentru a crea un nou resource group.
-- --name aplicatie-laborator specifică numele resource group-ului.
-- --location westeurope specifică regiunea în care va fi creat resource group-ul.
-
-
- ### Pasul 2: Crearea unui Repository GitHub pentru Procesul de CI/CD
-
-
-CI/CD (Continuous Integration/Continuous Deployment) este o practică DevOps esențială care permite echipelor de dezvoltare să livreze modificările codului mai frecvent și cu o mai mare fiabilitate. CI/CD implică două concepte principale:
-
-- Continuous Integration (CI): Procesul de integrare continuă a modificărilor codului într-un repository partajat, unde fiecare modificare este testată automat pentru a asigura că nu cauzează erori.
-
-- Continuous Deployment (CD): Procesul de implementare continuă a modificărilor validate automat într-un mediu de producție sau pre-producție, asigurând astfel o livrare rapidă și fiabilă a funcționalităților noi.
-
-**Crearea unui Repository GitHub și Încărcarea Codului**
-
-Pentru a crea un repository GitHub public și a încărca codul din /samples/azure-cloud-sample/cicd-github-actions-sample, urmează acești pași:
-
-
-1. Accesează [GitHub](https://github.com/) și Autentifică-te:
-2. Click pe butonul + din colțul din dreapta sus și selectează New repository.
-3. Configurează Repository-ul:
-    - Repository name: aplicatie-laborator-azure
-    - Description: (opțional) Repository pentru procesul de CI/CD cu Azure
-    - Public/Private: Selectează Public
-    - Add .gitignore: Node
-4. Inițializează Repository-ul Local:
-- Deschide terminalul (local, din folder-ul **fii-cloud-computing-practice**) și execută următoarele comenzi pentru a inițializa repository-ul local și a adăuga fișierele din /samples/azure-cloud-sample/cicd-github-actions-sample:
-
-- inlocuieste USERNAME cu username-ul din GitHub
+3. În Cloud Shell, asigură-te că ești autentificat cu contul tău Google și că folosești proiectul corect. Poți verifica proiectul actual folosind comanda:
 
 ```bash
-# Clonează repository-ul nou creat
-git clone https://github.com/<USERNAME>/aplicatie-laborator-azure.git
-cd aplicatie-laborator-azure
-
-# Copiază fișierele din directorul sursă în repository
-cp -r ../samples/azure-cloud-sample/cicd-github-actions-sample/* .
-
-# Adaugă fișierele la repository
-git add .
-
-# Fă un commit cu mesajul inițial
-git commit -m "Initial commit with CI/CD sample code"
-
-# Trimite modificările la repository-ul GitHub
-git push origin main
+gcloud config list project
 ```
 
- ### Pasul 3: Generarea unui Personal Access Token din Interfața Web GitHub
-
-1. Mergi la [GitHub](https://github.com/) și autentifică-te în contul tău.
-2. Accesează Setările de Securitate:
-- Click pe poza ta de profil în colțul din dreapta sus al paginii.
-- Selectează "Settings" (Setări) din meniu.
-- În meniul din stânga, selectează "Developer settings" (Setări pentru dezvoltatori).
-3. Navighează la Personal Access Tokens:
-
-- În meniul din stânga, selectează "Personal access tokens".
-- Click pe "Tokens (classic)" pentru a vedea token-urile existente și opțiunea de a genera unul nou.
-4. Generarea unui Token Nou:
-- Click pe butonul verde "Generate new token".
-- Introdu un nume descriptiv pentru token-ul tău în câmpul "Note" (Notă), astfel încât să știi pentru ce l-ai creat.
-5. Bifeaza toate permisiunule pentru token
-6. Generarea și Salvarea Token-ului:
-- După ce ai selectat permisiunile, click pe butonul verde "Generate token" (Generează token).
-- GitHub va genera token-ul și îți va afișa o valoare unică. Notează-ți această valoare într-un loc sigur, deoarece nu vei mai putea să o vezi din nou după ce părăsești această pagină.
-
-
-
-
- ### Pasul 4: Crearea unui App Service cu Opțiunea de Continuous Deployment Activată și Legată la Repository-ul GitHub
-
-Pentru a crea un App Service în Azure cu opțiunea de continuous deployment activată și legată la repository-ul GitHub creat anterior, urmează acești pași:
-
-1. Accesează Azure Cloud Shell:
-
-2. Creează un App Service Plan:
-
-Un App Service Plan definește regiunea, nivelul de scalare și prețul pentru aplicația ta. Creează un App Service Plan cu comanda:
-
+Dacă proiectul afișat nu este "AplicatieManagementStudenti" sau proiectul dorit, folosește comanda gcloud config set project pentru a seta proiectul corect:
 
 ```bash
-az appservice plan create --name plan-aplicatie-laborator --resource-group aplicatie-laborator --location westeurope --sku B1 --is-linux
+gcloud config set project aplicatie-management-studenti
 ```
 
-- --name plan-aplicatie-laborator: Numele planului.
-- --resource-group aplicatie-laborator: Numele resource group-ului.
-- --location westeurope: Regiunea în care va fi creat planul.
-- --sku B1: Nivelul de preț și scalare (Basic, nivel 1).
-
-3. Creează App Service-ul:
+4. Dacă proiectul "AplicatieManagementStudenti" nu există, poți crea unul nou folosind comanda:
 
 ```bash
-az webapp create --name aplicatie-laborator-service --resource-group aplicatie-laborator --plan plan-aplicatie-laborator --runtime "NODE:20-lts"
+gcloud projects create aplicatie-management-studenti --name="Aplicatie Management Studenti"
 ```
 
-- --name aplicatie-laborator-service: Numele aplicației.
-- --resource-group aplicatie-laborator: Numele resource group-ului.
-- --plan plan-aplicatie-laborator: Numele planului de App Service creat anterior.
+Această comandă va crea un proiect nou cu numele "AplicatieManagementStudenti". Poți înlocui numele și descrierea proiectului cu ceea ce dorești.
 
-4. Setează Configurația pentru Deploy:
+5. După ce proiectul este creat sau selectat, asigură-te că ești în proiectul corect înainte de a continua.
+Verifică și activează "Billing Account".
 
-- inlocuieste USERNAME cu username-ul din GitHub
-- inloucieste TOKEN cu token-ul generat anterior
+6. Creează un nou service account cu numele "management-studenti-svc" folosind comanda:
 
 ```bash
-az webapp deployment github-actions add --repo "<USERNAME>/aplicatie-laborator-azure" -g aplicatie-laborator -n aplicatie-laborator-service --token <TOKEN> -b "main"
+gcloud iam service-accounts create management-studenti-svc --display-name "Service Account pentru Managementul Studenților"
+```
+
+7. După ce service account-ul este creat, asignează drepturile "Cloud Run Invoker", "Storage Admin", "Vertx AI Administrator" si "Datastore Owner" folosind comanda. 
+
+```bash
+gcloud projects add-iam-policy-binding aplicatie-management-studenti \
+--member=serviceAccount:management-studenti-svc@aplicatie-management-studenti.iam.gserviceaccount.com \
+--role=roles/run.invoker
+
+gcloud projects add-iam-policy-binding aplicatie-management-studenti \
+--member=serviceAccount:management-studenti-svc@aplicatie-management-studenti.iam.gserviceaccount.com \
+--role=roles/storage.admin
+
+gcloud projects add-iam-policy-binding aplicatie-management-studenti \
+--member=serviceAccount:management-studenti-svc@aplicatie-management-studenti.iam.gserviceaccount.com \
+--role=roles/aiplatform.admin
+
+gcloud projects add-iam-policy-binding aplicatie-management-studenti \
+--member=serviceAccount:management-studenti-svc@aplicatie-management-studenti.iam.gserviceaccount.com \
+--role=roles/datastore.owner
+```
+
+8. După ce proiectul este selectat sau creat, poți crea primul bucket, "date-media-utilizator-neprocesate", folosind următoarea comandă:
+
+```bash
+gsutil mb -l europe-west1 gs://date-media-utilizator-neprocesate
+```
+9. Repetă comanda de mai sus pentru a crea și al doilea bucket, "date-media-utilizator-procesate".
+
+```bash
+gsutil mb -l europe-west1 gs://date-media-utilizator-procesate
+```
+
+10. Ruleaza comanda pentru a crea o resursa de tip Datastore cu numele "management-studenti".
+
+```bash
+gcloud firestore databases create \
+--database=management-studenti \
+--location=europe-west1 \
+--type=datastore-mode 
+```
+
+### Pasul 2: Crearea Funcției Cloud și Configurarea Setărilor
+
+1. Navighează la meniul din partea stângă și selectează "Cloud Functions".
+2. Apasă pe butonul "+ Create function" pentru a începe procesul de creare a unei funcții Cloud noi.
+3. În pagina de configurare a funcției Cloud, completează următoarele detalii:
+- Name: Procesare-date-utilizator
+- Mediu(Environment) functie: 2nd
+- Region: europe-west1
+- Trigger: Cloud Storage
+- Bucket: date-media-utilizator-neprocesate
+- Event Type: Finalize object (google.cloud.storage.object.v1.finalized)
+4. În secțiunea "Runtime, build, connections and security settings", asigură-te că setezi "Runtime service account" pe "Service Account pentru Managementul Studentilor" (care a fost creat anterior). Aceasta este opțiunea care va permite funcției Cloud să acceseze resursele Google Cloud folosind service account-ul specificat.
+5. Seteaza urmatoarele variabile de mediu (environment variables): 
+- PROJECT=aplicatie-management-studenti
+- DATASTORE_DATABASE_ID=management-studenti
+5. După ce ai completat toate detaliile și setările necesare, apasă pe butonul "Next" pentru a continua.
+6. În secțiunea "Source code", poți încărca codul funcției tale Cloud. Pentru acest exemplu vom folosi codul din ./samples/google-cloud-sample/cloud-functions/image-recognition-translation-sample. Vom folosi aceasta functie pentru a procesa imagini încărcate într-un bucket de Google Storage de către o aplicație web găzduită pe Google App Engine. Când o imagine este încărcată, o funcție Google Cloud este declanșată pentru a prelua imaginea și a o trimite către Vertex AI Vision pentru analiză. Acest serviciu returnează o descriere a imaginii în limba engleză, care este apoi tradusă în română folosind Vertex AI Language. După analiză vom introduce in baza de date descrierea în română și în engleză. Principalul avantaj al acestei abordări este că sarcina intensivă de procesare a imaginii este mutată din aplicația web într-o funcție Google Cloud care rulează asincron, ceea ce înseamnă că utilizatorul nu trebuie să aștepte ca imaginea să fie procesată, îmbunătățind astfel experiența utilizatorului.
+
+In fisierul index.js
+```javascript
+const functions = require('@google-cloud/functions-framework');
+const { Datastore } = require('@google-cloud/datastore');
+const {
+  VertexAI
+} = require('@google-cloud/vertexai');
+
+const location = 'europe-west1';
+const visionModel = 'gemini-1.0-pro-vision';
+const textModel = 'gemini-1.0-pro-001';
+const vertexAI = getGenericVertexAIClient();
+const generativeModel = getGenerativeModelTranslateModel();
+const generativeVisionModel = getVisionModel();
+const datastore = getDatastoreClient();
+
+// Register a CloudEvent callback with the Functions Framework that will
+// be triggered by Cloud Storage.
+functions.cloudEvent('helloGCS', async (cloudEvent) => {
+  console.log(`Event ID: ${cloudEvent.id}`);
+  console.log(`Event Type: ${cloudEvent.type}`);
+
+  const file = cloudEvent.data;
+  console.log(`Bucket: ${file.bucket}`);
+  console.log(`File: ${file.name}`);
+  console.log(`Metageneration: ${file.metageneration}`);
+  console.log(`Created: ${file.timeCreated}`);
+  console.log(`Updated: ${file.updated}`);
+
+  var englishContent = await detectImageContent(file)
+  var roContent = await translateContent(englishContent);
+  let data = { englishContent: englishContent, roContent: roContent }
+
+  await SaveInDatabase(data, file.name)
+});
+
+function delay(time) {
+  return new Promise(resolve => setTimeout(resolve, time));
+}
+
+
+function getGenerativeModelTranslateModel() {
+  return vertexAI.preview.getGenerativeModel({
+    model: textModel,
+    generationConfig: {
+      'candidateCount': 1,
+      'maxOutputTokens': 4096,
+      'topP': 1,
+    },
+    safetySettings: [
+      {
+        'category': 'HARM_CATEGORY_HATE_SPEECH',
+        'threshold': 'BLOCK_MEDIUM_AND_ABOVE'
+      },
+      {
+        'category': 'HARM_CATEGORY_DANGEROUS_CONTENT',
+        'threshold': 'BLOCK_MEDIUM_AND_ABOVE'
+      },
+      {
+        'category': 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
+        'threshold': 'BLOCK_MEDIUM_AND_ABOVE'
+      },
+      {
+        'category': 'HARM_CATEGORY_HARASSMENT',
+        'threshold': 'BLOCK_MEDIUM_AND_ABOVE'
+      }
+    ],
+  });
+}
+
+function getVisionModel() {
+  return vertexAI.getGenerativeModel({
+    model: visionModel,
+  });
+}
+
+function getGenericVertexAIClient() {
+  return new VertexAI({ project: process.env.PROJECT, location: location });
+}
+
+
+async function detectImageContent(file) {
+  // Replace this with your own base64 image string
+  const filePart = { fileData: { fileUri: `gs://${file.bucket}/${file.name}`, mimeType: "image/jpeg" } };
+  const textPart = { text: 'What is this picture about?' };
+  const request = {
+    contents: [{ role: 'user', parts: [textPart, filePart] }],
+  };
+  const streamingResult = await generativeVisionModel.generateContentStream(request); //todo this shoul
+  const contentResponse = await streamingResult.response;
+
+  var enContent = contentResponse.candidates[0].content.parts[0].text;
+  console.log('Response: ', enContent);
+
+  return enContent;
+}
+
+async function translateContent(content, source = "en", target = "ro") {
+  const req = {
+    contents: [
+      { role: 'user', parts: [{ text: `translate from ${source} to ${target}: ${content}}` }] }
+    ]
+  };
+
+  const result = await generativeModel.generateContent(req);
+  const jsonResponse = JSON.stringify(result.response.candidates[0].content.parts[0].text);
+  console.log('Response: ', jsonResponse);
+
+  return jsonResponse;
+}
+
+async function SaveInDatabase(data, originalname) {
+
+  const query = datastore.createQuery('users').filter('fileName', '=', originalname);
+
+  const [entities] = await datastore.runQuery(query);
+
+  if (entities.length === 0) {
+    console.log('No matching entity found.');
+    return;
+  }
+
+  const entity = entities[0];
+  const key = entity[datastore.KEY];
+
+  entity.enFileContent = data.englishContent;
+  entity.roFileContent = data.roContent
+
+  await datastore.save({
+    key: key,
+    data: entity,
+  });
+}
+
+function getDatastoreClient() {
+  return new Datastore({
+    projectId: process.env.PROJECT,
+    databaseId: process.env.DATASTORE_DATABASE_ID,
+  });
+}
+```
+
+In fisierul package.json
+
+```javascript
+{
+  "dependencies": {
+    "@google-cloud/functions-framework": "^3.0.0",
+    "@google-cloud/storage": "^5.18.2",
+    "@google-cloud/datastore": "^8.2.0",
+    "@google-cloud/vertexai": "^1.1.0",
+        "pdfkit": "^0.13.0",
+        "pngjs": "^7.0.0",
+        "sharp": "^0.33.3",
+        "fs": "^0.0.1-security"
+  }
+}
+  ```
+
+7. După ce ai încărcat codul și ai configurat eventualele setări suplimentare, apasă pe butonul "Deploy" pentru a crea funcția Cloud.
+
+### Pasul 3: Testarea Funcției Cloud (Doar pentru functiile "media-resizer-sample" si "media-to-pdf-conveter-sample". Pentru "image-recognition-translation-sample" nu se aplica). 
+
+1. Navighează la meniul din partea stângă și selectează "Storage" -> "Browser".
+2. Identifică bucket-ul "date-media-utilizator-neprocesate-v2" și deschide-l.
+3. Apasă pe butonul "Upload files" și selectează un fișier media local pe care dorești să-l încarci.
+4. După ce fișierul este încărcat cu succes, așteaptă câteva momente pentru ca funcția să fie declanșată și să proceseze fișierul.
+5. După ce procesul este complet, navighează la bucket-ul "date-media-utilizator-procesate-v2" în aceeași pagină "Storage".
+6. Verifică dacă fișierul procesat, conform specificațiilor din funcția Cloud, este prezent în acest bucket.
+7. Dacă fișierul procesat este prezent și este conform așteptărilor, funcția Cloud a fost testată cu succes.
+
+### Pasul 4: Deploy-ul unei Aplicații Node.js folosind Google App Engine
+
+1. Asigură-te că ești autentificat în Cloud Shell (dreapta sus) și că ești în directorul proiectului tău Node.js.
+
+2. Ruleaza urmatoarele comenzi
+
+```bash
+git clone https://github.com/matei97/fii-cloud-computing-practice
+
+cd fii-cloud-computing-practice/samples/google-cloud-sample/app-engine
+```
+3. Vizualizati fisierele
+
+```bash
+cat app.yaml
+```
+Acesta conține informații despre cum să fie configurată și rulată aplicația ta atunci când este desfășurată pe platforma Google App Engine. Iată o scurtă explicație a fiecărei secțiuni din fișierul app.yaml:
+
+- runtime: Această secțiune specifică mediu de rulare pentru aplicația ta. În cazul tău, runtime: nodejs18 indică faptul că aplicația ta va rula pe mediul Node.js versiunea 18.
+- service: Această secțiune specifică numele serviciului de App Engine. Acest nume este folosit pentru a identifica și gestiona serviciul tău în cadrul platformei Google Cloud.
+- service_account: Aici specifici service account-ul care va fi folosit pentru a accesa resursele Google Cloud din cadrul aplicației tale. Acest service account este asociat cu rolurile și permisiunile necesare pentru a face operațiunile dorite în cloud.
+- env_variables: Această secțiune permite definirea variabilelor de mediu care sunt disponibile în timpul rulării aplicației tale pe Google App Engine. În cazul tău, variabila GCLOUD_STORAGE_BUCKET este definită pentru a specifica bucket-ul Google Cloud Storage în care se vor încărca datele utilizatorului.
+
+
+```bash
+cat index.html
+```
+
+Acest fisier contine un formular pentru înregistrarea utilizatorilor și pentru încărcarea unei fotografii de profil. Iată o explicație detaliată a fiecărei secțiuni a fișierului:
+
+```bash
+cat app.js
+```
+
+Acesta este un fișier JavaScript care definește o aplicație Node.js care utilizează Google Cloud Storage pentru a încărca fișiere și Google Cloud Datastore pentru a salva datele utilizatorilor.
+
+4. Rulează urmatoarea comanda pentru a încărca și a desfășura aplicația pe Google App Engine. Acest lucru va începe procesul de deploy și va crea o nouă versiune a aplicației tale.
+
+
+```bash
+gcloud app deploy
+```
+Numărul **11** corespunde locației europe-west.
+
+5. Urmează instrucțiunile afișate în Cloud Shell pentru a confirma și a finaliza deploy-ul aplicației.
+
+6. Pentru a afla URL-ul aplicației "default" de pe Google App Engine, poți folosi comanda gcloud app browse, astfel:
+
+```bash
+gcloud app browse
 ```
