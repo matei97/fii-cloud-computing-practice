@@ -11,7 +11,27 @@
 
 4. În Cloud Shell, execută următoarea comandă pentru a crea un resource group numit "aplicatie-laborator" în regiunea "westeurope":
 ```bash
-az group create --name aplicatie-laborator --location westeurope
+#!/bin/bash
+
+# Prefix for the resource group name
+PREFIX="aplicatie-laborator"
+export LOCATION="westeurope"
+export APP_SERVICE_PLAN="plan-aplicatie-laborator"
+export APP_SERVICE="aplicatie-laborator-service"
+# Get the currently logged in Azure username
+AZURE_USER=$(az ad signed-in-user show --query userPrincipalName -o tsv | cut -d'@' -f1)
+
+# Generate the resource group name
+GROUP_NAME="${PREFIX}-${AZURE_USER}"
+
+# Set the resource group name in an environment variable
+export AZURE_RESOURCE_GROUP_NAME=$GROUP_NAME
+
+# Create the resource group in the specified location
+az group create --name "$AZURE_RESOURCE_GROUP_NAME" --location $LOCATION
+
+# Output the created resource group name
+echo "Resource group created with name: $AZURE_RESOURCE_GROUP_NAME"
 ```
 Explicație Comandă
 - az group create este comanda Azure CLI pentru a crea un nou resource group.
@@ -48,10 +68,15 @@ Pentru a crea un repository GitHub public și a încărca codul din /samples/azu
 ```bash
 # Clonează repository-ul nou creat
 git clone https://github.com/<USERNAME>/aplicatie-laborator-azure.git
+git clone https://github.com/matei97/fii-cloud-computing-practice.git
+
 cd aplicatie-laborator-azure
 
+git config --global user.email "user@email.com"
+git config --global user.name "Your Name"
+
 # Copiază fișierele din directorul sursă în repository
-cp -r ../samples/azure-cloud-sample/cicd-github-actions-sample/* .
+cp -r ..fii-cloud-computing-practice/samples/azure-cloud-sample/cicd-github-actions-sample/* .
 
 # Adaugă fișierele la repository
 git add .
@@ -77,11 +102,17 @@ git push origin main
 4. Generarea unui Token Nou:
 - Click pe butonul verde "Generate new token".
 - Introdu un nume descriptiv pentru token-ul tău în câmpul "Note" (Notă), astfel încât să știi pentru ce l-ai creat.
-5. Bifeaza toate permisiunule pentru token
+5. Bifeaza toate permisiunile pentru token
 6. Generarea și Salvarea Token-ului:
 - După ce ai selectat permisiunile, click pe butonul verde "Generate token" (Generează token).
 - GitHub va genera token-ul și îți va afișa o valoare unică. Notează-ți această valoare într-un loc sigur, deoarece nu vei mai putea să o vezi din nou după ce părăsești această pagină.
+7. Executa comanda urmatoarea pentru a crea o variabial de mediu cu tokenul generat.
 
+```bash
+export TOKEN="<TOKEN>"
+export GIT_USERNAME="<GIT_USERNAME>"
+export GIT_REPO="aplicatie-laborator-azure"
+```
 
 
 
@@ -97,7 +128,7 @@ Un App Service Plan definește regiunea, nivelul de scalare și prețul pentru a
 
 
 ```bash
-az appservice plan create --name plan-aplicatie-laborator --resource-group aplicatie-laborator --location westeurope --sku B1 --is-linux
+az appservice plan create --name $APP_SERVICE_PLAN --resource-group $AZURE_RESOURCE_GROUP_NAME --location $LOCATION --sku B1 --is-linux
 ```
 
 - --name plan-aplicatie-laborator: Numele planului.
@@ -108,7 +139,7 @@ az appservice plan create --name plan-aplicatie-laborator --resource-group aplic
 3. Creează App Service-ul:
 
 ```bash
-az webapp create --name aplicatie-laborator-service --resource-group aplicatie-laborator --plan plan-aplicatie-laborator --runtime "NODE:20-lts"
+az webapp create --name $APP_SERVICE_PLAN --resource-group $AZURE_RESOURCE_GROUP_NAME --plan $APP_SERVICE_PLAN  --runtime "NODE:20-lts"
 ```
 
 - --name aplicatie-laborator-service: Numele aplicației.
@@ -117,9 +148,17 @@ az webapp create --name aplicatie-laborator-service --resource-group aplicatie-l
 
 4. Setează Configurația pentru Deploy:
 
-- inlocuieste USERNAME cu username-ul din GitHub
-- inloucieste TOKEN cu token-ul generat anterior
+```bash
+az webapp deployment github-actions add --repo "$GIT_USERNAME/$GIT_REPO" -g $AZURE_RESOURCE_GROUP_NAME -n $APP_SERVICE_PLAN --token $TOKEN -b "main"
+
+echo Verifica pagina "https://github.com/$GIT_USERNAME/$GIT_REPO/actions/"
+```
+
+
+ ### Pasul 4: Stergerea resurselor
+
+ **Această comandă va sterge resrouce group-ul si toate resursele aferente.**
 
 ```bash
-az webapp deployment github-actions add --repo "<USERNAME>/aplicatie-laborator-azure" -g aplicatie-laborator -n aplicatie-laborator-service --token <TOKEN> -b "main"
+az group delete --name $AZURE_RESOURCE_GROUP_NAME
 ```
