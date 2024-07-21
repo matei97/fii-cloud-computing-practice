@@ -15,9 +15,9 @@
 
 # Prefix for the resource group name
 PREFIX="aplicatie-laborator"
-export LOCATION="westeurope"
-export APP_SERVICE_PLAN="plan-aplicatie-laborator"
-export APP_SERVICE="aplicatie-laborator-service"
+export location="westeurope"
+export appServicePlan="plan-aplicatie-laborator"
+export appService="aplicatie-laborator-service"
 # Get the currently logged in Azure username
 AZURE_USER=$(az ad signed-in-user show --query userPrincipalName -o tsv | cut -d'@' -f1)
 
@@ -25,13 +25,13 @@ AZURE_USER=$(az ad signed-in-user show --query userPrincipalName -o tsv | cut -d
 GROUP_NAME="${PREFIX}-${AZURE_USER}"
 
 # Set the resource group name in an environment variable
-export AZURE_RESOURCE_GROUP_NAME=$GROUP_NAME
+export resourceGroup=$GROUP_NAME
 
 # Create the resource group in the specified location
-az group create --name "$AZURE_RESOURCE_GROUP_NAME" --location $LOCATION
+az group create --name "$resourceGroup" --location $location
 
 # Output the created resource group name
-echo "Resource group created with name: $AZURE_RESOURCE_GROUP_NAME"
+echo "Resource group created with name: $resourceGroup"
 ```
 Explicație Comandă
 - az group create este comanda Azure CLI pentru a crea un nou resource group.
@@ -109,9 +109,9 @@ git push origin main
 7. Executa comanda urmatoarea pentru a crea o variabial de mediu cu tokenul generat.
 
 ```bash
-export TOKEN="<TOKEN>"
-export GIT_USERNAME="<GIT_USERNAME>"
-export GIT_REPO="aplicatie-laborator-azure"
+export token="<TOKEN>"
+export gitUsername="<GIT_USERNAME>"
+export gitRepo="aplicatie-laborator-azure"
 ```
 
 
@@ -128,7 +128,7 @@ Un App Service Plan definește regiunea, nivelul de scalare și prețul pentru a
 
 
 ```bash
-az appservice plan create --name $APP_SERVICE_PLAN --resource-group $AZURE_RESOURCE_GROUP_NAME --location $LOCATION --sku B1 --is-linux
+az appservice plan create --name $appServicePlan --resource-group $resourceGroup --location $location --sku B1 --is-linux
 ```
 
 - --name plan-aplicatie-laborator: Numele planului.
@@ -139,7 +139,7 @@ az appservice plan create --name $APP_SERVICE_PLAN --resource-group $AZURE_RESOU
 3. Creează App Service-ul:
 
 ```bash
-az webapp create --name $APP_SERVICE_PLAN --resource-group $AZURE_RESOURCE_GROUP_NAME --plan $APP_SERVICE_PLAN  --runtime "NODE:20-lts"
+az webapp create --name $appService --resource-group $resourceGroup --plan $appServicePlan  --runtime "NODE:20-lts"
 ```
 
 - --name aplicatie-laborator-service: Numele aplicației.
@@ -149,9 +149,9 @@ az webapp create --name $APP_SERVICE_PLAN --resource-group $AZURE_RESOURCE_GROUP
 4. Setează Configurația pentru Deploy:
 
 ```bash
-az webapp deployment github-actions add --repo "$GIT_USERNAME/$GIT_REPO" -g $AZURE_RESOURCE_GROUP_NAME -n $APP_SERVICE_PLAN --token $TOKEN -b "main"
+az webapp deployment github-actions add --repo "$gitUsername/$gitRepo" -g $resourceGroup -n $appService --token $token -b "main"
 
-echo Verifica pagina "https://github.com/$GIT_USERNAME/$GIT_REPO/actions/"
+echo Verifica pagina "https://github.com/$gitUsername/$gitRepo/actions/"
 ```
 
 
@@ -160,5 +160,5 @@ echo Verifica pagina "https://github.com/$GIT_USERNAME/$GIT_REPO/actions/"
  **Această comandă va sterge resrouce group-ul si toate resursele aferente.**
 
 ```bash
-az group delete --name $AZURE_RESOURCE_GROUP_NAME
+az group delete --name $resourceGroup
 ```

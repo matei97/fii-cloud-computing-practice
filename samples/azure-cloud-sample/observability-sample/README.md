@@ -48,9 +48,28 @@ OpenTelemetry este un set de instrumente open-source și standardizate pentru co
 
 4. Executati urmatoarea comanda pentru a configura variabilele de mediu:
 ```bash
-$resourceGroup = "rg-aplicatie-laborator"
-$appInsights = "aplicatie-insights"
-$actionGroup = "grup-actiune"
+#!/bin/bash
+
+# Prefix for the resource group name
+PREFIX="aplicatie-laborator"
+export location="westeurope"
+export $appInsights = "aplicatie-insights"
+export $actionGroup = "grup-actiune"
+
+# Get the currently logged in Azure username
+AZURE_USER=$(az ad signed-in-user show --query userPrincipalName -o tsv | cut -d'@' -f1)
+
+# Generate the resource group name
+GROUP_NAME="${PREFIX}-${AZURE_USER}"
+
+# Set the resource group name in an environment variable
+export resourceGroup=$GROUP_NAME
+
+# Create the resource group in the specified location
+az group create --name "$resourceGroup" --location $location
+
+# Output the created resource group name
+echo "Resource group created with name: $resourceGroup"
 ```
 
 5. În Cloud Shell, execută următoarea comandă pentru a crea un resource group numit "aplicatie-laborator" în regiunea "westeurope":
@@ -103,7 +122,6 @@ Urmatoarele comenzi trebuie executate in folder /samples/azure-cloud-sample/obse
 ```bash
 azd init
 ```
-
  - selectare folder current
  - nume: aplicatie-laborator
 
