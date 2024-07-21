@@ -16,6 +16,7 @@
 
 const process = require('process'); // Required to mock environment variables
 const creds = require("./aplicatie-studenti-v1-26e5c73d09e7.json");
+//we should use management-studenti-svc account
 //please provide a service acount key from https://cloud.google.com/iam/docs/keys-create-delete
 
 
@@ -226,6 +227,15 @@ function getGenerativeModelTranslateModel(){
     ],
   });
 }
+
+
+const requiredEnvVars = ['PORT', 'GCLOUD_STORAGE_BUCKET', 'DATASTORE_DATABASE_ID'];
+
+requiredEnvVars.forEach((envVar) => {
+  if (!process.env[envVar]) {
+    throw new Error(`Environment variable ${envVar} is not set. Please set ${envVar} to continue.`);
+  }
+});
 
 initServer();
 
