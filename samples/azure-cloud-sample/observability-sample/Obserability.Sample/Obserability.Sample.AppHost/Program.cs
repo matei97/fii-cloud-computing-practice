@@ -15,13 +15,13 @@ var apiService = builder.AddProject<Projects.Obserability_Sample_ApiService>("ap
 builder.AddProject<Projects.Observability_Migration>("migration")
     .WithReference(db1).WithEnvironment("APPLICATIONINSIGHTS_CONNECTION_STRING",
         builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]);
-;
+
 
 builder.AddProject<Projects.Obserability_Sample_Web>("webfrontend")
     .WithExternalHttpEndpoints()
     .WithReference(cache)
     .WithReference(apiService).WithEnvironment("APPLICATIONINSIGHTS_CONNECTION_STRING",
         builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]);
-;
+
 
 builder.Build().Run();

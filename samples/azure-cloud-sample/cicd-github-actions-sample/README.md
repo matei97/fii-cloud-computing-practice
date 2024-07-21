@@ -14,7 +14,7 @@
 #!/bin/bash
 
 # Prefix for the resource group name
-PREFIX="aplicatie-laborator"
+PREFIX="rg"
 export location="westeurope"
 export appServicePlan="plan-aplicatie-laborator"
 export appService="aplicatie-laborator-service"

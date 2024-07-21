@@ -51,10 +51,10 @@ OpenTelemetry este un set de instrumente open-source și standardizate pentru co
 #!/bin/bash
 
 # Prefix for the resource group name
-PREFIX="aplicatie-laborator"
+PREFIX="rg"
 export location="westeurope"
-export $appInsights = "aplicatie-insights"
-export $actionGroup = "grup-actiune"
+export appInsights="aplicatie-insights"
+export actionGroup="grup-actiune"
 
 # Get the currently logged in Azure username
 AZURE_USER=$(az ad signed-in-user show --query userPrincipalName -o tsv | cut -d'@' -f1)
@@ -64,17 +64,15 @@ GROUP_NAME="${PREFIX}-${AZURE_USER}"
 
 # Set the resource group name in an environment variable
 export resourceGroup=$GROUP_NAME
+```
 
+5. În Cloud Shell, execută următoarea comandă pentru a crea un resource group numit "aplicatie-laborator" în regiunea "westeurope":
+```bash
 # Create the resource group in the specified location
 az group create --name "$resourceGroup" --location $location
 
 # Output the created resource group name
 echo "Resource group created with name: $resourceGroup"
-```
-
-5. În Cloud Shell, execută următoarea comandă pentru a crea un resource group numit "aplicatie-laborator" în regiunea "westeurope":
-```bash
-az group create --name $resourceGroup --location westeurope
 ```
 Explicație Comandă
 - az group create este comanda Azure CLI pentru a crea un nou resource group.
@@ -84,9 +82,9 @@ Explicație Comandă
 6. Crearea unui Application Insights
 
 ```bash
-az monitor app-insights component create --app $appInsights --location westeurope --resource-group $resourceGroup --application-type web
-$connectionString = (az monitor app-insights component show --resource-group $resourceGroup --app $appInsights --query connectionString --output tsv)
-$connectionString
+az monitor app-insights component create --app $appInsights --location $location --resource-group $resourceGroup --application-type web
+export connectionString=$(az monitor app-insights component show --resource-group $resourceGroup --app $appInsights --query connectionString --output tsv)
+echo $connectionString
 ```
 
 Salvați proprietatea **connectionString** rezultată.
@@ -120,7 +118,12 @@ Urmatoarele comenzi trebuie executate in folder /samples/azure-cloud-sample/obse
 2. Ruleaza urmatorii pasi
 
 ```bash
-azd init
+azd auth login
+```
+
+Nume mendiu:
+```bash
+az ad signed-in-user show --query userPrincipalName -o tsv | cut -d'@' -f1
 ```
  - selectare folder current
  - nume: aplicatie-laborator
@@ -198,7 +201,7 @@ Explicația comenzii:
 --scopes Resource-ID-Application-Insights: ID-ul resursei Application Insights.
 --condition "total requests/failed >= 5 where resultCode == 503": Condiția alertei.
 total requests/failed: Se referă la numărul total de cereri eșuate.
->= 5: Condiția numerică (dacă numărul total de cereri eșuate este mai mare sau egal cu 5).
+/>= 5: Condiția numerică (dacă numărul total de cereri eșuate este mai mare sau egal cu 5).
 where resultCode == 503: Condiția suplimentară (dacă codul rezultat este 503).
 --evaluation-frequency "1m": Frecvența evaluării (la fiecare minut).
 --window-size "5m": Perioada de timp pentru evaluare (ultimele 5 minute).

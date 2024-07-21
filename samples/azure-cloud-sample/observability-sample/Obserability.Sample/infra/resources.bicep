@@ -66,12 +66,12 @@ resource containerAppEnvironment 'Microsoft.App/managedEnvironments@2024-02-02-p
   }
   tags: tags
 
-  resource aspireDashboard 'dotNetComponents' = {
-    name: 'aspire-dashboard'
-    properties: {
-      componentType: 'AspireDashboard'
-    }
-  }
+  // resource aspireDashboard 'dotNetComponents' = {
+  //   name: 'aspire-dashboard'
+  //   properties: {
+  //     componentType: 'AspireDashboard'
+  //   }
+  // }
 }
 resource explicitContributorUserRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(containerAppEnvironment.id, principalId, subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c'))
