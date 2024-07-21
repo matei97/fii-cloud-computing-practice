@@ -92,7 +92,7 @@ app.post('/submit', multer.single('file'),  async (req, res, next) => {
     const publicUrl = format(
       `https://storage.googleapis.com/${bucket.name}/${blob.name}`
     );
-    res.status(200).send('This is your file ' + publicUrl + ' , please check your email');
+    res.status(200).send('This is your file ' + publicUrl);
   });
 
   blobStream.end(req.file.buffer);

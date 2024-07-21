@@ -15,7 +15,7 @@
 runtime: nodejs18
 # service: aplicatie-management-studenti
 service: default
-service_account: aplicatie-studenti-v1@appspot.gserviceaccount.com
+service_account: management-studenti-svc@aplicatie-management.iam.gserviceaccount.com
 env_variables:
   GCLOUD_STORAGE_BUCKET: date-media-utilizator-neprocesate-v2
   DATASTORE_DATABASE_ID: management-studenti

@@ -11,7 +11,7 @@ functions.cloudEvent('helloGCS', async (cloudEvent) => {
   console.log(`Event ID: ${cloudEvent.id}`);
   console.log(`Event Type: ${cloudEvent.type}`);
 
-  const targetBucketName = 'pdf-files-converted-bucket';
+  const targetBucketName = process.env.TARGET_BUCKET_NAME;
 
   const file = cloudEvent.data;
   console.log(`Bucket: ${file.bucket}`);
@@ -53,8 +53,13 @@ functions.cloudEvent('helloGCS', async (cloudEvent) => {
   pdf.pipe(fs.createWriteStream(destinationFile));
   pdf.end();
 
+  await delay(2000);
+
   const convertedFile = await targetBucket.upload(destinationFile);
 
   console.log(`Converted file: ${convertedFile}`);
 });
 
+function delay(time) {
+  return new Promise(resolve => setTimeout(resolve, time));
+}

@@ -4,7 +4,7 @@ const sharp = require('sharp');
 const fs = require('fs');
 const path = require('path');
 
-const targetBucketName = 'date-media-utilizator-procesate-v2';
+const targetBucketName = process.env.TARGET_BUCKET_NAME;
 
 // Register a CloudEvent callback with the Functions Framework that will
 // be triggered by Cloud Storage.

@@ -8,7 +8,17 @@
 
 2. În partea de sus dreapta a ecranului, apasă pe butonul "Activate Cloud Shell" pentru a deschide Cloud Shell.
 
-3. În Cloud Shell, asigură-te că ești autentificat cu contul tău Google și că folosești proiectul corect. Poți verifica proiectul actual folosind comanda:
+
+3. Executati urmatoarea comanda pentru a configura variabilele de mediu:
+```bash
+export projectName=aplicatie-management
+export svcAccount=management-studenti-svc
+export location=europe-west1
+export bucket1Name=date-media-utilizator-neprocesate
+export bucket2Name=date-media-utilizator-procesate
+export databaseName=management-studenti
+```
+4. În Cloud Shell, asigură-te că ești autentificat cu contul tău Google și că folosești proiectul corect. Poți verifica proiectul actual folosind comanda:
 
 ```bash
 gcloud config list project
@@ -17,13 +27,13 @@ gcloud config list project
 Dacă proiectul afișat nu este "AplicatieManagementStudenti" sau proiectul dorit, folosește comanda gcloud config set project pentru a seta proiectul corect:
 
 ```bash
-gcloud config set project aplicatie-management-studenti
+gcloud config set project $projectName
 ```
 
 4. Dacă proiectul "AplicatieManagementStudenti" nu există, poți crea unul nou folosind comanda:
 
 ```bash
-gcloud projects create aplicatie-management-studenti --name="Aplicatie Management Studenti"
+gcloud projects create $projectName --name="Aplicatie Management Studenti"
 ```
 
 Această comandă va crea un proiect nou cu numele "AplicatieManagementStudenti". Poți înlocui numele și descrierea proiectului cu ceea ce dorești.
@@ -31,49 +41,52 @@ Această comandă va crea un proiect nou cu numele "AplicatieManagementStudenti"
 5. După ce proiectul este creat sau selectat, asigură-te că ești în proiectul corect înainte de a continua.
 Verifică și activează "Billing Account".
 
-6. Creează un nou service account cu numele "management-studenti-svc" folosind comanda:
+6. **Optiona** Urmareste aceasta [pagina](https://support.terra.bio/hc/en-us/articles/360057589931-How-to-set-up-and-use-Google-Cloud-budget-alerts) pentru a seta un buget proiectului creat.
+
+7. Creează un nou service account cu numele "management-studenti-svc" folosind comanda:
 
 ```bash
-gcloud iam service-accounts create management-studenti-svc --display-name "Service Account pentru Managementul Studenților"
+gcloud iam service-accounts create $svcAccount --display-name "Service Account pentru Managementul Studenților"
 ```
 
-7. După ce service account-ul este creat, asignează drepturile "Cloud Run Invoker", "Storage Admin", "Vertx AI Administrator" si "Datastore Owner" folosind comanda. 
+8. După ce service account-ul este creat, asignează drepturile "Cloud Run Invoker", "Storage Admin", "Vertx AI Administrator" si "Datastore Owner" folosind comanda. 
 
 ```bash
-gcloud projects add-iam-policy-binding aplicatie-management-studenti \
---member=serviceAccount:management-studenti-svc@aplicatie-management-studenti.iam.gserviceaccount.com \
+gcloud projects add-iam-policy-binding $projectName \
+--member=serviceAccount:$svcAccount@$projectName.iam.gserviceaccount.com \
 --role=roles/run.invoker
 
-gcloud projects add-iam-policy-binding aplicatie-management-studenti \
---member=serviceAccount:management-studenti-svc@aplicatie-management-studenti.iam.gserviceaccount.com \
+gcloud projects add-iam-policy-binding $projectName \
+--member=serviceAccount:$svcAccount@$projectName.iam.gserviceaccount.com \
 --role=roles/storage.admin
 
-gcloud projects add-iam-policy-binding aplicatie-management-studenti \
---member=serviceAccount:management-studenti-svc@aplicatie-management-studenti.iam.gserviceaccount.com \
+gcloud projects add-iam-policy-binding $projectName \
+--member=serviceAccount:$svcAccount@$projectName.iam.gserviceaccount.com \
 --role=roles/aiplatform.admin
 
-gcloud projects add-iam-policy-binding aplicatie-management-studenti \
---member=serviceAccount:management-studenti-svc@aplicatie-management-studenti.iam.gserviceaccount.com \
+gcloud projects add-iam-policy-binding $projectName \
+--member=serviceAccount:$svcAccount@$projectName.iam.gserviceaccount.com \
 --role=roles/datastore.owner
 ```
+9. Pentru a folosi serviciile Vetex AI este nevoie sa le activam. Navigati catre serviciul Vertex AI si bifam **ENABLE ALL RECOMMENDED APIS**.
 
-8. După ce proiectul este selectat sau creat, poți crea primul bucket, "date-media-utilizator-neprocesate", folosind următoarea comandă:
-
-```bash
-gsutil mb -l europe-west1 gs://date-media-utilizator-neprocesate
-```
-9. Repetă comanda de mai sus pentru a crea și al doilea bucket, "date-media-utilizator-procesate".
+10. După ce proiectul este selectat sau creat, poți crea primul bucket, "date-media-utilizator-neprocesate", folosind următoarea comandă:
 
 ```bash
-gsutil mb -l europe-west1 gs://date-media-utilizator-procesate
+gsutil mb -l $location gs://$bucket1Name
+```
+11. Repetă comanda de mai sus pentru a crea și al doilea bucket, "date-media-utilizator-procesate".
+
+```bash
+gsutil mb -l $location gs://$bucket2Name
 ```
 
-10. Ruleaza comanda pentru a crea o resursa de tip Datastore cu numele "management-studenti".
+11. Ruleaza comanda pentru a crea o resursa de tip Datastore cu numele "management-studenti". Aici e nevoie de confirmare pentru a activa serviciul - prin tasta y.
 
 ```bash
 gcloud firestore databases create \
---database=management-studenti \
---location=europe-west1 \
+--database=$databaseName \
+--location=$location \
 --type=datastore-mode 
 ```
 
@@ -92,6 +105,8 @@ gcloud firestore databases create \
 5. Seteaza urmatoarele variabile de mediu (environment variables): 
 - PROJECT=aplicatie-management-studenti
 - DATASTORE_DATABASE_ID=management-studenti
+- TARGET_BUCKET_NAME = date-media-utilizator-procesate
+
 5. După ce ai completat toate detaliile și setările necesare, apasă pe butonul "Next" pentru a continua.
 6. În secțiunea "Source code", poți încărca codul funcției tale Cloud. Pentru acest exemplu vom folosi codul din ./samples/google-cloud-sample/cloud-functions/image-recognition-translation-sample. Vom folosi aceasta functie pentru a procesa imagini încărcate într-un bucket de Google Storage de către o aplicație web găzduită pe Google App Engine. Când o imagine este încărcată, o funcție Google Cloud este declanșată pentru a prelua imaginea și a o trimite către Vertex AI Vision pentru analiză. Acest serviciu returnează o descriere a imaginii în limba engleză, care este apoi tradusă în română folosind Vertex AI Language. După analiză vom introduce in baza de date descrierea în română și în engleză. Principalul avantaj al acestei abordări este că sarcina intensivă de procesare a imaginii este mutată din aplicația web într-o funcție Google Cloud care rulează asincron, ceea ce înseamnă că utilizatorul nu trebuie să aștepte ca imaginea să fie procesată, îmbunătățind astfel experiența utilizatorului.
 
@@ -289,6 +304,7 @@ Acesta conține informații despre cum să fie configurată și rulată aplicaț
 - service_account: Aici specifici service account-ul care va fi folosit pentru a accesa resursele Google Cloud din cadrul aplicației tale. Acest service account este asociat cu rolurile și permisiunile necesare pentru a face operațiunile dorite în cloud.
 - env_variables: Această secțiune permite definirea variabilelor de mediu care sunt disponibile în timpul rulării aplicației tale pe Google App Engine. În cazul tău, variabila GCLOUD_STORAGE_BUCKET este definită pentru a specifica bucket-ul Google Cloud Storage în care se vor încărca datele utilizatorului.
 
+**Verificați faptul că variabilele din fișierul app.yaml coincid cu configurația proiectului**.
 
 ```bash
 cat index.html
@@ -317,3 +333,5 @@ Numărul **11** corespunde locației europe-west.
 ```bash
 gcloud app browse
 ```
+
+7. Dacă totul a mers cu success, după completarea formularului ar trebui să vedeți detaliile in baza de date Datastore (management-studenti). **enFileContent** va fi populat cu descrierea imaginii provenite din serviciul Vertex AI iar **roFileContent** va fi populat cu traducerea acesteia.
