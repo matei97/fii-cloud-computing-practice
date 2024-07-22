@@ -70,22 +70,8 @@ Pași:
 2. Inițializați un proiect Node.js și instalați pachetele necesare.
 3. Creați un fișier index.html.
 
-```bash
-# Creați un nou director pentru proiectul front-end și accesați-l
-mkdir proiectulMeuFrontEnd
-cd proiectulMeuFrontEnd
 
-# Inițializați un nou proiect Node.js
-npm init -y
-
-# Instalați pachetele necesare (de exemplu, Express pentru un server simplu)
-npm install express
-
-# Creați un fișier index.html în directorul rădăcină al proiectului
-touch index.html
-```
-
-Exemplu de conținut pentru index.html:
+Exemplu de conținut pentru index.html - aplicatie web:
 
 ```html
 <!DOCTYPE html>
@@ -115,6 +101,31 @@ Exemplu de conținut pentru index.html:
 
 ```
 
+Exemplu de conținut pentru server.js - aplicatie web:
+
+```javascript
+const express = require('express');
+const path = require('path');
+const dotenv = require('dotenv');
+
+dotenv.config();
+
+const app = express();
+const port = process.env.PORT || 3001;
+
+// Servește fișierul index.html
+app.use(express.static(path.join(__dirname)));
+
+app.get('/config.js', (req, res) => {
+    res.set('Content-Type', 'application/javascript');
+    res.send(`const API_URL = '${process.env.API_URL}';`);
+});
+
+app.listen(port, () => {
+    console.log(`Serverul rulează la http://localhost:${port}`);
+});
+
+```
 
 
 **Exercițiul 3: Dezvoltarea API-ului**
@@ -133,48 +144,62 @@ Pași:
 2. Inițializați un proiect Node.js și instalați pachetele necesare.
 3. Configurați conexiunea la baza de date SQL Azure.
 
-```bash
-# Creați un nou director pentru proiectul API și accesați-l
-mkdir proiectulMeuAPI
-cd proiectulMeuAPI
 
-# Inițializați un nou proiect Node.js
-npm init -y
-
-# Instalați pachetele necesare (de exemplu, Express și mssql pentru conectarea la SQL)
-npm install express mssql
-
-# Creați un fișier index.js în directorul rădăcină al proiectului
-touch index.js
-
-```
-
-Exemplu de conținut pentru index.js:
+Exemplu de conținut pentru index.js serviciu web:
 
 ```javascript
 const express = require('express');
 const sql = require('mssql');
+const cors = require('cors');
 
 const app = express();
 const port = process.env.PORT || 3000;
+const bodyParser = require('body-parser');
 
 // Configurația conexiunii la baza de date
 const config = {
-    user: 'adminulMeu',
-    password: 'parolaMea123!',
-    server: 'serverulMeuSql.database.windows.net',
-    database: 'bazaMeaDeDate',
+    user: '',
+    password: '',
+    server: '',
+    database: '',
     options: {
         encrypt: true
     }
 };
 
+const corsOptions = {
+    origin: 'http://localhost:3001', // Originea permisă
+    optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
+app.use(bodyParser.json());
+
+
 // Endpoint care returnează date din baza de date
 app.get('/api/data', async (req, res) => {
+    console.log(`GET Request`);
+
     try {
         let pool = await sql.connect(config);
         let result = await pool.request().query('SELECT * FROM TabelaMea');
         res.json(result.recordset);
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+});
+
+
+// Endpoint pentru a adăuga date în baza de date
+app.post('/api/data', async (req, res) => {
+    console.log(`POST Request` + req.body);
+    try {
+        let pool = await sql.connect(config);
+        let result = await pool.request()
+            .input('Name', sql.NVarChar, req.body.Name)
+            .input('Value', sql.NVarChar, req.body.Value)
+            .query('INSERT INTO TabelaMea (Name, Value) VALUES (@Name, @Value)');
+        res.status(201).send('Date adăugate');
     } catch (err) {
         res.status(500).send(err.message);
     }
