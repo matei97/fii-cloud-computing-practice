@@ -96,7 +96,7 @@ Azure Developer CLI (azd) este un instrument de linie de comandă care ajută de
 [Detalii instalare](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/install-azd?tabs=winget-windows%2Cbrew-mac%2Cscript-linux&pivots=os-windows)
 
 
-1. Rulează in PowerShell urmatorul scriptȘ
+1. Rulează in PowerShell urmatorul script:
 
 ```PowerShell
 powershell -ex AllSigned -c "Invoke-RestMethod 'https://aka.ms/install-azd.ps1' | Invoke-Expression"
@@ -109,7 +109,6 @@ azd auth login
 ```
 
 ### Pasul 3: Configurarea aplicației si deploy-ul folosind Azure
-//todo imagine diagrama?
 Urmatoarele comenzi trebuie executate in folder /samples/azure-cloud-sample/observability-sample/Obserability.Sample
 
 1. Modificati fisierul **Obserability.Sample.AppHost/appsettings.json**.
@@ -121,9 +120,11 @@ Urmatoarele comenzi trebuie executate in folder /samples/azure-cloud-sample/obse
 azd auth login
 ```
 
-Nume mendiu:
+Nume mediu:
 ```bash
-az ad signed-in-user show --query userPrincipalName -o tsv | cut -d'@' -f1
+echo Nume mediu: $(az ad signed-in-user show --query userPrincipalName -o tsv | cut -d'@' -f1)
+
+azd init
 ```
  - selectare folder current
  - nume: aplicatie-laborator
@@ -176,11 +177,11 @@ Explicația comenzii:
 ### Pasul 5. Obtine id-urile pentru grupul de actiune creat anterior si pentru aplicatia de Application Insights.
 
 ```bash
-$actionGroupId = (az monitor action-group show --resource-group $resourceGroup --name $actionGroup --query id --output tsv)
-$appInsightsId = (az monitor app-insights component show --resource-group $resourceGroup --app $appInsights --query id --output tsv)
+export actionGroupId=$(az monitor action-group show --resource-group $resourceGroup --name $actionGroup --query id --output tsv)
+export appInsightsId=$(az monitor app-insights component show --resource-group $resourceGroup --app $appInsights --query id --output tsv)
 
-$actionGroupId
-$appInsightsId
+echo $actionGroupId
+echo $appInsightsId
 ```
 
 ### Pasul 6

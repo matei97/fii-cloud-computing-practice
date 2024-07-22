@@ -103,7 +103,10 @@ public static class Extensions
 
         if (!string.IsNullOrEmpty(configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]))
         {
-            otelBuilder.UseAzureMonitor();
+            otelBuilder.UseAzureMonitor(options =>
+            {
+                options.ConnectionString = configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
+            });
         }
 
         builder.AddOpenTelemetryExporters();
@@ -169,7 +172,7 @@ public static class Extensions
         decimal? failRate
     )
     {
-        failRate ??=30;
+        failRate ??= 30;
         return app.UseMiddleware(
             typeof(FailGeneratorMiddleware),
             failRate.Value
