@@ -1,7 +1,7 @@
 ## Ghid: Ghid pentru Crearea unui API Local folosind Express.js si crearea unei Aplicații Node.js pentru Conectarea la API-ul Local
 
 
-În acest ghid, vei învăța cum să creezi o aplicație simplă folosind Node.js care va accesa API-ul OpenWeatherMap pentru a obține date meteo.
+În acest ghid, vei învăța cum să creezi o aplicație simplă folosind Node.js compusă dintr-un API și o aplicație web.
 
 ### Pasul 1: Configurare a Mediului de Lucru
 
