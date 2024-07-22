@@ -14,16 +14,16 @@ Puncte de Pornire:
 
 ```bash
 #!/bin/bash
-
+RANDOM_STRING=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 4 | head -n 1)
 # Prefix for the resource group name
 PREFIX="rg"
 export location="westeurope"
-export appServicePlan="plan-aplicatie-practica"
-export appServiceBackend="service-aplicatie-practica-be"
-export appServiceFrontEnd="service-aplicatie-practica-fe"
-export sqlServer="server-practica"
-export dbName="db-practica"
-export dbUser="admin"
+export appServicePlan="plan-aplicatie-practica-$RANDOM_STRING"
+export appServiceBackend="service-aplicatie-practica-be-$RANDOM_STRING"
+export appServiceFrontEnd="service-aplicatie-practica-fe-$RANDOM_STRING"
+export sqlServer="server-practica-$RANDOM_STRING"
+export dbName="db-practica-$RANDOM_STRING"
+export dbUser="my-admin"
 export dbPassword="parolaMea123!"
 
 # Get the currently logged in Azure username
@@ -42,10 +42,10 @@ az group create --name $resourceGroup --location $location
 az appservice plan create --name $appServicePlan --resource-group $resourceGroup --location $location --sku B1 --is-linux
 
 # Pasul 3: Creați o Aplicație Web pentru front-end
-az webapp create --name $appServiceFrontEnd --resource-group $resourceGroup --plan $appServicePlan --runtime "NODE:14-lts"
+az webapp create --name $appServiceFrontEnd --resource-group $resourceGroup --plan $appServicePlan --runtime "NODE:20-lts"
 
 # Pasul 4: Creați o Aplicație Web pentru API
-az webapp create --name $appServiceFrontEnd --resource-group $resourceGroup --plan $appServicePlan --runtime "NODE:14-lts"
+az webapp create --name $appServiceBackend --resource-group $resourceGroup --plan $appServicePlan --runtime "NODE:20-lts"
 
 # Pasul 5: Creați o Bază de Date SQL Azure
 az sql server create --name $sqlServer --resource-group $resourceGroup --location $location --admin-user $dbUser --admin-password $dbPassword
@@ -200,6 +200,28 @@ Pași:
 2. Configurați GitHub Actions pentru implementarea continuă.
 3. Implementați aplicațiile în Azure App Service.
 
+
+
+**Gestionarea Produselor și Categoriilor**
+Scenariu:
+Extindeți aplicația existentă pentru a gestiona produse și categorii. Fiecare produs trebuie să aparțină unei categorii, iar o categorie poate avea mai multe produse. Veți modifica baza de date, API-ul și front-end-ul pentru a permite utilizatorilor să adauge, să vizualizeze și să gestioneze produse și categorii.
+
+1. Baza de Date:
+
+- Creați un tabel Categories cu coloanele CategoryId (cheie primară) și CategoryName.
+- Creați un tabel Products cu coloanele ProductId (cheie primară), ProductName, Price și CategoryId (cheie externă legată de CategoryId din Categories).
+
+2. API:
+
+- Adăugați endpoint-uri pentru a gestiona categoriile (GET, POST, PUT, DELETE).
+- Adăugați endpoint-uri pentru a gestiona produsele (GET, POST, PUT, DELETE).
+- Asigurați-vă că endpoint-urile pentru produse permit filtrarea după categorie.
+
+3. Front-End:
+
+- Modificați interfața pentru a permite utilizatorilor să vizualizeze și să adauge categorii.
+- Modificați interfața pentru a permite utilizatorilor să vizualizeze și să adauge produse, selectând categoria dintr-o listă derulantă.
+- Asigurați-vă că lista de produse poate fi filtrată după categorie.
 
 
 **Pasul 5: Ștergerea Resurselor**
