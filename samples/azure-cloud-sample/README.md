@@ -80,25 +80,99 @@ Exemplu de conținut pentru index.html - aplicatie web:
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aplicația Mea</title>
+    <script src="/config.js"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
     <h1>Bine ați venit la Aplicația Mea!</h1>
     <p>Aceasta este o aplicație web simplă.</p>
+    <form id="dataForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        <label for="value">Value:</label>
+        <input type="text" id="value" name="value" required>
+        <button type="submit">Adaugă</button>
+    </form>
     <button onclick="fetchData()">Afișează date</button>
     <div id="data"></div>
 
     <script>
-        function fetchData() {
-            fetch('/api/data')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('data').innerText = JSON.stringify(data);
+        document.getElementById('dataForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const value = document.getElementById('value').value;
+            
+
+            console.log(JSON.stringify({ Name: name, Value: value }));
+            await fetch(`${API_URL}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ Name: name, Value: value })
+            });
+
+            document.getElementById('name').value = '';
+            document.getElementById('value').value = '';
+            fetchData();
+        });
+
+        async function fetchData() {
+            const response = await fetch(`${API_URL}`);
+            const data = await response.json();
+            displayData(data);
+        }
+
+        function displayData(data) {
+            const table = document.createElement('table');
+            const headerRow = document.createElement('tr');
+            
+            const headers = ['ID', 'Name', 'Value'];
+            headers.forEach(headerText => {
+                const header = document.createElement('th');
+                const textNode = document.createTextNode(headerText);
+                header.appendChild(textNode);
+                headerRow.appendChild(header);
+            });
+
+            table.appendChild(headerRow);
+
+            data.forEach(item => {
+                const row = document.createElement('tr');
+
+                Object.values(item).forEach(text => {
+                    const cell = document.createElement('td');
+                    const textNode = document.createTextNode(text);
+                    cell.appendChild(textNode);
+                    row.appendChild(cell);
                 });
+
+                table.appendChild(row);
+            });
+
+            const dataDiv = document.getElementById('data');
+            dataDiv.innerHTML = '';
+            dataDiv.appendChild(table);
         }
     </script>
 </body>
 </html>
-
 ```
 
 Exemplu de conținut pentru server.js - aplicatie web:
@@ -209,6 +283,9 @@ app.listen(port, () => {
     console.log(`API-ul rulează la http://localhost:${port}`);
 });
 ```
+
+
+**[Popularea bazei de date](practice/web%20api/db.sql)**
 
 **Exercițiul 4: Integrarea și Implementarea Aplicației**
 
