@@ -11,7 +11,7 @@ Dorim să creăm o aplicație Node.js care să efectueze apeluri către două AP
 
 ### Exemple de API-uri
 
-Puteți folosi urmatoarele API-uri sau cauta altele [aici] (https://rapidapi.com/collection/list-of-free-apis)
+Puteți folosi urmatoarele API-uri sau cauta altele [aici](https://rapidapi.com/collection/list-of-free-apis)
 
 1. API 1: OpenWeatherMap
 - URL: http://api.openweathermap.org/data/2.5/weather

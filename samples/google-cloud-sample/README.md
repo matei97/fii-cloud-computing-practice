@@ -81,7 +81,7 @@ gsutil mb -l $location gs://$bucket1Name
 gsutil mb -l $location gs://$bucket2Name
 ```
 
-11. Ruleaza comanda pentru a crea o resursa de tip Datastore cu numele "management-studenti". Aici e nevoie de confirmare pentru a activa serviciul - prin tasta y.
+11. Ruleaza comanda pentru a crea o resursa de tip Datastore cu numele "management-studenti". Aici e nevoie de confirmare penptru a activa serviciul - prin tasta y.
 
 ```bash
 gcloud firestore databases create \
@@ -103,7 +103,7 @@ gcloud firestore databases create \
 - Event Type: Finalize object (google.cloud.storage.object.v1.finalized)
 4. În secțiunea "Runtime, build, connections and security settings", asigură-te că setezi "Runtime service account" pe "Service Account pentru Managementul Studentilor" (care a fost creat anterior). Aceasta este opțiunea care va permite funcției Cloud să acceseze resursele Google Cloud folosind service account-ul specificat.
 5. Seteaza urmatoarele variabile de mediu (environment variables): 
-- PROJECT=aplicatie-management-studenti
+- PROJECT=aplicatie-management
 - DATASTORE_DATABASE_ID=management-studenti
 - TARGET_BUCKET_NAME = date-media-utilizator-procesate
 

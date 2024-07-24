@@ -1,0 +1,16 @@
+{
+    "name": "send-email-function",
+    "version": "1.0.0",
+    "description": "Send support email function",
+    "main": "index.js",
+    "dependencies": {
+      "@google-cloud/functions-framework": "^3.0.0",
+      "@sendgrid/mail": "^7.4.0"
+    },
+    "scripts": {
+      "start": "functions-framework --target=sendSupportEmail"
+    },
+    "author": "Nume Autor",
+    "license": "ISC"
+  }
+  

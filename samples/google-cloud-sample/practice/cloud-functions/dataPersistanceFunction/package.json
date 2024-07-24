@@ -1,0 +1,16 @@
+{
+    "name": "save-support-request-function",
+    "version": "1.0.0",
+    "description": "Save support request function",
+    "main": "index.js",
+    "dependencies": {
+      "@google-cloud/functions-framework": "^3.0.0",
+      "@google-cloud/datastore": "^8.2.0"
+    },
+    "scripts": {
+      "start": "functions-framework --target=saveSupportRequest"
+    },
+    "author": "Nume Autor",
+    "license": "ISC"
+  }
+  

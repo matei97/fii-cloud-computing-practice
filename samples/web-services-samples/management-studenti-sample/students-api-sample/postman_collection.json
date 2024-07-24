@@ -26,7 +26,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{base_url}}/info?id=1",
+					"raw": "{{base_url}}/studenti?id=1",
 					"host": [
 						"{{base_url}}"
 					],
@@ -164,7 +164,7 @@
 						"{{base_url}}"
 					],
 					"path": [
-						"info",
+						"studenti",
 						"1"
 					]
 				},
