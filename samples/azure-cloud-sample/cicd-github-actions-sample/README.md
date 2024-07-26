@@ -76,7 +76,7 @@ git config --global user.email "user@email.com"
 git config --global user.name "Your Name"
 
 # Copiază fișierele din directorul sursă în repository
-cp -r ..fii-cloud-computing-practice/samples/azure-cloud-sample/cicd-github-actions-sample/* .
+cp -r ../fii-cloud-computing-practice/samples/azure-cloud-sample/cicd-github-actions-sample/* .
 
 # Adaugă fișierele la repository
 git add .
