@@ -12,7 +12,7 @@ async function generateRandomNumber() {
             jsonrpc: '2.0',
             method: 'generateIntegers',
             params: {
-                apiKey: 'API_KEY', // Înlocuiește cu cheia ta API de la Random.org
+                apiKey: 'fe4393c5-54d1-4606-9508-a64532f46b31', // Înlocuiește cu cheia ta API de la Random.org
                 n: 1,
                 min: 1,
                 max: 100
@@ -22,9 +22,9 @@ async function generateRandomNumber() {
 
         // Extragem numărul aleatoriu din răspuns
         const randomNumber = response.data.result.random.data[0];
-        console.log('Numărul aleatoriu generat:', randomNumber);
+        console.log('Random number:', randomNumber);
     } catch (error) {
-        console.error('Eroare la generarea numărului aleatoriu:', error);
+        console.error('Error during random number generation', error);
     }
 }
 

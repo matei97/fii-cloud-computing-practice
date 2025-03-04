@@ -84,3 +84,82 @@ generateRandomNumber();
    node index.js
 ```
 
+
+
+
+## EN - Guide: Creating a Node.js Application to Access an API
+
+In this guide, we'll learn how to create a simple Node.js application that accesses an external API to generate random numbers. We will use the Random.org API for this example.
+
+### Step 1: Configuring the Work Environment
+
+1. **Install Node.js:** Download and install Node.js from the official site: [Node.js Download](https://nodejs.org/).
+
+2. **Create Working Directory:** Create a new directory for your project and navigate to it using the terminal or command line.
+
+## Step 2: Obtain an API Key from Random.org
+
+1. Go to [Random.org](https://www.random.org/) in your browser.
+2. If you don't already have an account, click on the "Sign Up" or "Registration" button to create a new account.
+3. Complete the registration form with your personal information and create an account.
+4. After logging into your Random.org account, find and click on the "Account Settings" option.
+5. In your account settings page, you should find an option called "API Key". Look for this option and tap on it.
+6. If you don't already have an API key generated, there should be an option to generate a new one. Click the appropriate button or link to generate a new API key.
+7. Once you have generated a new API key, it should be displayed on the screen.
+
+### Step 3: Initialize the Node.js Project
+
+1. Open the terminal and navigate to the project directory.
+
+2. Run the following command to initialize a Node.js project:
+
+```bash
+npm init -y
+```
+### Step 4: Install Dependencies
+
+1. **Installing the `axios' Package:** We will use the `axios' package to make HTTP requests to the Random.org API. Install `axios` using the following command:
+```bash
+npm install axios
+```
+
+### Step 5: Writing the Code
+
+1. Open the file `index.js` or create a new file named `index.js`.
+
+2. In the `index.js` file, write the following code:
+
+```javascript
+// Import the axios module
+const axios = require('axios');
+
+// URL to the Random.org API
+const apiUrl = 'https://api.random.org/json-rpc/2/invoke';
+
+// Function to generate a random number
+async function generateRandomNumber() {
+    try {
+        // Make an HTTP POST request to the API
+        const response = await axios.post(apiUrl, {
+            jsonrpc: '2.0',
+            method: 'generateIntegers',
+            params: {
+                apiKey: 'API_KEY', // Replace with your API key from Random.org
+                n: 1,
+                min: 1,
+                max: 100
+            },
+            ID: 1
+        });
+
+        // Extract the random number from the response
+        const randomNumber = response.data.result.random.data[0];
+        console.log('Random number generated:', randomNumber);
+    } catch (error) {
+        console.error('Error generating random number:', error);
+    }
+}
+
+// We call the function to generate a random number
+generateRandomNumber();
+```
