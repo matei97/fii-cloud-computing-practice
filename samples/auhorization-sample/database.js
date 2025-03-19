@@ -5,7 +5,6 @@ const pool = mysql.createPool({
   connectionLimit: 10,
   host: 'localhost',
   user: 'root',
-  password: 'Password123.@',
   database: 'Clouding'
 });
 
