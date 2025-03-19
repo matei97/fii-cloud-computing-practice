@@ -63,10 +63,10 @@ let getLast = (callback) => {
 
 app.post('/api/signup', async (req, res) => {
     try {
-        const {username, password, first_name, last_name} = req.body;
+        const {username, password, first_name, last_name,  group_name} = req.body;
         let hashed_password = getHashedPassword(password);
-        const query = 'INSERT INTO Accounts (username, password, first_name, last_name, group_name) VALUES (?, ?, ?, ?, ?);';
-        let sqlQueryParams = [username, hashed_password, first_name, last_name, 'GROUP_USER'];
+        const query = 'INSERT INTO Accounts (username, first_name, last_name, group_name) VALUES (?, ?, ?, ?);';
+        let sqlQueryParams = [username, first_name, last_name, group_name];
         database.query(query, sqlQueryParams, async (err, results) => {
             if (err) {
                 return res.status(500).json({message: 'Error on the server.'});
