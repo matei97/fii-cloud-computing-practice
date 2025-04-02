@@ -12,11 +12,11 @@
 # limitations under the License.
 
 # [START gae_storage_yaml]
-runtime: nodejs18
+runtime: nodejs20
 # service: aplicatie-management-studenti
 service: default
-service_account: management-studenti-svc@aplicatie-management.iam.gserviceaccount.com
+service_account: sample-application-svc@sample-application-123ab.iam.gserviceaccount.com
 env_variables:
-  GCLOUD_STORAGE_BUCKET: date-media-utilizator-neprocesate-v2
-  DATASTORE_DATABASE_ID: management-studenti
+  GCLOUD_STORAGE_BUCKET: profile-pictures-new123
+  DATASTORE_DATABASE_ID: users-data
 # [END gae_storage_yaml]
